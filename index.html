@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Firebase Task Manager</title>
+    <title>Firebase Task Manager with Chat</title>
     <style>
         * {
             margin: 0;
@@ -19,7 +19,7 @@
         }
 
         .container {
-            max-width: 800px;
+            max-width: 1200px;
             margin: 0 auto;
         }
 
@@ -34,22 +34,27 @@
             margin: 50px auto;
         }
 
-        /* Task Container Styles */
-        .task-container {
+        /* Main App Container */
+        .app-container {
             background: white;
-            padding: 30px;
             border-radius: 10px;
             box-shadow: 0 10px 40px rgba(0,0,0,0.1);
             display: none;
+            overflow: hidden;
         }
 
+        /* Header Styles */
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 2px solid #f0f0f0;
+            padding: 20px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 24px;
         }
 
         .user-profile {
@@ -63,28 +68,53 @@
             height: 40px;
             border-radius: 50%;
             object-fit: cover;
+            border: 2px solid white;
         }
 
         .user-profile span {
             font-weight: 500;
-            color: #333;
         }
 
         .logout-btn {
             padding: 8px 16px;
-            background: #dc3545;
+            background: rgba(255,255,255,0.2);
             color: white;
-            border: none;
+            border: 1px solid white;
             border-radius: 5px;
             cursor: pointer;
             font-size: 14px;
+            transition: background 0.3s;
         }
 
         .logout-btn:hover {
-            background: #c82333;
+            background: rgba(255,255,255,0.3);
         }
 
-        /* Task Form Styles */
+        /* Main Content Layout */
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 20px;
+            padding: 30px;
+            background: #f5f5f5;
+        }
+
+        /* Tasks Section */
+        .tasks-section {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        /* Task Form */
         .task-form {
             background: #f8f9fa;
             padding: 20px;
@@ -92,13 +122,16 @@
             margin-bottom: 30px;
         }
 
-        .task-form h3 {
-            margin-bottom: 15px;
-            color: #333;
-        }
-
         .form-group {
             margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-weight: 500;
+            font-size: 14px;
         }
 
         .form-group input,
@@ -116,38 +149,43 @@
             resize: vertical;
         }
 
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
         .add-task-btn {
-            padding: 10px 20px;
+            padding: 12px 20px;
             background: #28a745;
             color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            font-size: 14px;
+            font-size: 16px;
+            font-weight: 500;
+            width: 100%;
         }
 
         .add-task-btn:hover {
             background: #218838;
         }
 
-        /* Tasks Section */
-        .tasks-section {
-            margin-top: 20px;
-        }
-
-        .tasks-header {
+        /* Filters */
+        .filters {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            gap: 15px;
             margin-bottom: 20px;
+            flex-wrap: wrap;
         }
 
-        .filter-options {
-            display: flex;
-            gap: 10px;
+        .filter-group {
+            flex: 1;
+            min-width: 150px;
         }
 
-        .filter-options select {
+        .filter-group select {
+            width: 100%;
             padding: 8px;
             border: 1px solid #ddd;
             border-radius: 5px;
@@ -155,14 +193,21 @@
         }
 
         .task-stats {
-            color: #666;
+            background: #e9ecef;
+            padding: 10px 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
             font-size: 14px;
+            color: #495057;
         }
 
         /* Task Cards */
         .tasks-list {
             display: grid;
             gap: 15px;
+            max-height: 600px;
+            overflow-y: auto;
+            padding-right: 10px;
         }
 
         .task-card {
@@ -230,6 +275,42 @@
             line-height: 1.5;
         }
 
+        .task-details {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            font-size: 13px;
+        }
+
+        .task-detail-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .detail-label {
+            color: #6c757d;
+            font-size: 11px;
+            text-transform: uppercase;
+        }
+
+        .detail-value {
+            color: #333;
+            font-weight: 500;
+        }
+
+        .reward-value {
+            color: #28a745;
+            font-weight: 600;
+        }
+
+        .deadline-value {
+            color: #dc3545;
+        }
+
         .task-footer {
             display: flex;
             justify-content: space-between;
@@ -240,7 +321,7 @@
 
         .task-actions {
             display: flex;
-            gap: 10px;
+            gap: 8px;
         }
 
         .task-actions button {
@@ -279,6 +360,141 @@
             background: #e0a800;
         }
 
+        .chat-btn {
+            background: #17a2b8;
+            color: white;
+        }
+
+        .chat-btn:hover {
+            background: #138496;
+        }
+
+        /* Chat Section */
+        .chat-section {
+            background: white;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            height: 800px;
+        }
+
+        .chat-header {
+            padding: 15px 20px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .chat-header h3 {
+            color: #333;
+            font-size: 18px;
+        }
+
+        .chat-header p {
+            color: #6c757d;
+            font-size: 13px;
+            margin-top: 5px;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .message {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .message-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .message-content {
+            flex: 1;
+        }
+
+        .message-header {
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
+            margin-bottom: 5px;
+        }
+
+        .message-sender {
+            font-weight: 600;
+            color: #333;
+            font-size: 14px;
+        }
+
+        .message-time {
+            font-size: 11px;
+            color: #999;
+        }
+
+        .message-text {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #333;
+            line-height: 1.4;
+        }
+
+        .message.own-message {
+            flex-direction: row-reverse;
+        }
+
+        .message.own-message .message-text {
+            background: #667eea;
+            color: white;
+        }
+
+        .chat-input-area {
+            padding: 20px;
+            border-top: 1px solid #dee2e6;
+        }
+
+        .chat-input-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-input-group input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .chat-input-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .send-btn {
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .send-btn:hover {
+            background: #5a67d8;
+        }
+
         .empty-state {
             text-align: center;
             padding: 40px;
@@ -287,7 +503,34 @@
             border-radius: 8px;
         }
 
-        /* Login/Register Form Styles (kept from previous) */
+        /* Message Styles (from previous) */
+        .message {
+            padding: 12px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            text-align: center;
+            display: none;
+        }
+
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        /* Auth Form Styles */
         h2 {
             text-align: center;
             color: #333;
@@ -325,32 +568,6 @@
 
         .google-btn:hover {
             background: #c53929;
-        }
-
-        .message {
-            padding: 12px;
-            border-radius: 5px;
-            margin-bottom: 20px;
-            text-align: center;
-            display: none;
-        }
-
-        .success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-
-        .error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-
-        .info {
-            background: #d1ecf1;
-            color: #0c5460;
-            border: 1px solid #bee5eb;
         }
 
         .separator {
@@ -405,7 +622,7 @@
     <div class="container">
         <!-- Auth Container (Login/Register) -->
         <div id="authContainer" class="auth-container">
-            <h2>Firebase Task Manager</h2>
+            <h2>Task Manager with Chat</h2>
             
             <div id="message" class="message"></div>
             
@@ -455,10 +672,10 @@
             </div>
         </div>
 
-        <!-- Task Container (Shown after login) -->
-        <div id="taskContainer" class="task-container">
+        <!-- Main App Container (Shown after login) -->
+        <div id="appContainer" class="app-container">
             <div class="header">
-                <h2>My Tasks</h2>
+                <h1>Task Manager & Chat</h1>
                 <div class="user-profile">
                     <img id="userPhoto" src="https://via.placeholder.com/40" alt="Profile">
                     <span id="userName"></span>
@@ -466,45 +683,92 @@
                 </div>
             </div>
 
-            <!-- Add Task Form -->
-            <div class="task-form">
-                <h3>Add New Task</h3>
-                <div class="form-group">
-                    <input type="text" id="taskTitle" placeholder="Task title" required>
-                </div>
-                <div class="form-group">
-                    <textarea id="taskDescription" placeholder="Task description"></textarea>
-                </div>
-                <div class="form-group">
-                    <select id="taskPriority">
-                        <option value="low">Low Priority</option>
-                        <option value="medium" selected>Medium Priority</option>
-                        <option value="high">High Priority</option>
-                    </select>
-                </div>
-                <button class="add-task-btn" onclick="addTask()">Add Task</button>
-            </div>
+            <div class="main-content">
+                <!-- Tasks Section -->
+                <div class="tasks-section">
+                    <h2 class="section-title">Tasks</h2>
+                    
+                    <!-- Add Task Form -->
+                    <div class="task-form">
+                        <h3>Create New Task</h3>
+                        <div class="form-group">
+                            <label>Title *</label>
+                            <input type="text" id="taskTitle" placeholder="Enter task title" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Description</label>
+                            <textarea id="taskDescription" placeholder="Enter task description"></textarea>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Reward</label>
+                                <input type="text" id="taskReward" placeholder="e.g., $50, Gift Card">
+                            </div>
+                            <div class="form-group">
+                                <label>Deadline</label>
+                                <input type="date" id="taskDeadline">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Priority</label>
+                            <select id="taskPriority">
+                                <option value="low">Low Priority</option>
+                                <option value="medium" selected>Medium Priority</option>
+                                <option value="high">High Priority</option>
+                            </select>
+                        </div>
+                        
+                        <button class="add-task-btn" onclick="addTask()">Create Task</button>
+                    </div>
 
-            <!-- Tasks List -->
-            <div class="tasks-section">
-                <div class="tasks-header">
+                    <!-- Filters -->
+                    <div class="filters">
+                        <div class="filter-group">
+                            <select id="priorityFilter" onchange="filterTasks()">
+                                <option value="all">All Priorities</option>
+                                <option value="high">High Priority</option>
+                                <option value="medium">Medium Priority</option>
+                                <option value="low">Low Priority</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <select id="statusFilter" onchange="filterTasks()">
+                                <option value="all">All Tasks</option>
+                                <option value="active">Active</option>
+                                <option value="completed">Completed</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Task Stats -->
                     <div class="task-stats" id="taskStats">Loading tasks...</div>
-                    <div class="filter-options">
-                        <select id="priorityFilter" onchange="filterTasks()">
-                            <option value="all">All Priorities</option>
-                            <option value="high">High Priority</option>
-                            <option value="medium">Medium Priority</option>
-                            <option value="low">Low Priority</option>
-                        </select>
-                        <select id="statusFilter" onchange="filterTasks()">
-                            <option value="all">All Tasks</option>
-                            <option value="active">Active</option>
-                            <option value="completed">Completed</option>
-                        </select>
+
+                    <!-- Tasks List -->
+                    <div id="tasksList" class="tasks-list">
+                        <!-- Tasks will be dynamically added here -->
                     </div>
                 </div>
-                <div id="tasksList" class="tasks-list">
-                    <!-- Tasks will be dynamically added here -->
+
+                <!-- Chat Section -->
+                <div class="chat-section">
+                    <div class="chat-header">
+                        <h3>Team Chat</h3>
+                        <p>Discuss tasks and collaborate with team members</p>
+                    </div>
+                    
+                    <div id="chatMessages" class="chat-messages">
+                        <!-- Messages will be dynamically added here -->
+                    </div>
+                    
+                    <div class="chat-input-area">
+                        <div class="chat-input-group">
+                            <input type="text" id="chatMessageInput" placeholder="Type your message..." onkeypress="handleChatKeyPress(event)">
+                            <button class="send-btn" onclick="sendChatMessage()">Send</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -536,7 +800,9 @@
             updateDoc,
             deleteDoc,
             doc,
-            getDocs
+            getDocs,
+            serverTimestamp,
+            limit
         } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
 
         // Firebase configuration
@@ -563,6 +829,7 @@
         // Global variables
         let currentUser = null;
         let tasksUnsubscribe = null;
+        let chatUnsubscribe = null;
         let currentFilter = {
             priority: 'all',
             status: 'all'
@@ -641,16 +908,20 @@
 
         // Logout
         window.logout = function() {
-            // Unsubscribe from tasks listener
+            // Unsubscribe from listeners
             if (tasksUnsubscribe) {
                 tasksUnsubscribe();
                 tasksUnsubscribe = null;
+            }
+            if (chatUnsubscribe) {
+                chatUnsubscribe();
+                chatUnsubscribe = null;
             }
             
             signOut(auth).then(() => {
                 showMessage('Logged out successfully', 'info');
                 document.getElementById('authContainer').style.display = 'block';
-                document.getElementById('taskContainer').style.display = 'none';
+                document.getElementById('appContainer').style.display = 'none';
                 
                 // Clear input fields
                 document.getElementById('loginEmail').value = '';
@@ -660,6 +931,8 @@
                 document.getElementById('registerPassword').value = '';
                 document.getElementById('taskTitle').value = '';
                 document.getElementById('taskDescription').value = '';
+                document.getElementById('taskReward').value = '';
+                document.getElementById('taskDeadline').value = '';
             }).catch((error) => {
                 showMessage(error.message, 'error');
             });
@@ -679,8 +952,6 @@
                 errorMessage = 'Invalid email address';
             } else if (error.code === 'auth/popup-closed-by-user') {
                 errorMessage = 'Sign-in popup was closed';
-            } else if (error.code === 'auth/unauthorized-domain') {
-                errorMessage = 'This domain is not authorized for Firebase authentication';
             }
             
             showMessage(errorMessage, 'error');
@@ -692,6 +963,8 @@
             
             const title = document.getElementById('taskTitle').value.trim();
             const description = document.getElementById('taskDescription').value.trim();
+            const reward = document.getElementById('taskReward').value.trim();
+            const deadline = document.getElementById('taskDeadline').value;
             const priority = document.getElementById('taskPriority').value;
             
             if (!title) {
@@ -702,16 +975,22 @@
             try {
                 await addDoc(collection(db, 'tasks'), {
                     userId: currentUser.uid,
+                    userName: currentUser.displayName || 'User',
                     title: title,
                     description: description,
+                    reward: reward || 'Not specified',
+                    deadline: deadline || 'No deadline',
                     priority: priority,
                     completed: false,
-                    createdAt: new Date().toISOString()
+                    createdAt: new Date().toISOString(),
+                    updatedAt: new Date().toISOString()
                 });
                 
                 // Clear form
                 document.getElementById('taskTitle').value = '';
                 document.getElementById('taskDescription').value = '';
+                document.getElementById('taskReward').value = '';
+                document.getElementById('taskDeadline').value = '';
                 document.getElementById('taskPriority').value = 'medium';
                 
                 showMessage('Task added successfully!', 'success');
@@ -724,7 +1003,8 @@
         window.toggleTask = async function(taskId, currentStatus) {
             try {
                 await updateDoc(doc(db, 'tasks', taskId), {
-                    completed: !currentStatus
+                    completed: !currentStatus,
+                    updatedAt: new Date().toISOString()
                 });
             } catch (error) {
                 showMessage('Error updating task: ' + error.message, 'error');
@@ -755,12 +1035,19 @@
             
             try {
                 await updateDoc(doc(db, 'tasks', taskId), {
-                    title: newTitle.trim()
+                    title: newTitle.trim(),
+                    updatedAt: new Date().toISOString()
                 });
                 showMessage('Task updated successfully!', 'success');
             } catch (error) {
                 showMessage('Error updating task: ' + error.message, 'error');
             }
+        };
+
+        // Open chat for task
+        window.openTaskChat = function(taskId, taskTitle) {
+            document.getElementById('chatHeaderTitle').textContent = `Chat about: ${taskTitle}`;
+            loadTaskMessages(taskId);
         };
 
         // Filter tasks
@@ -828,15 +1115,44 @@
             const completedCount = tasks.filter(t => t.completed).length;
             taskStats.textContent = `${tasks.length} total (${completedCount} completed)`;
             
-            tasksList.innerHTML = tasks.map(task => `
-                <div class="task-card ${task.completed ? 'completed' : ''}">
+            tasksList.innerHTML = tasks.map(task => {
+                const deadline = task.deadline && task.deadline !== 'No deadline' 
+                    ? new Date(task.deadline).toLocaleDateString() 
+                    : 'No deadline';
+                
+                const isOverdue = task.deadline && task.deadline !== 'No deadline' && 
+                                 new Date(task.deadline) < new Date() && !task.completed;
+                
+                return `
+                <div class="task-card ${task.completed ? 'completed' : ''} ${isOverdue ? 'overdue' : ''}">
                     <div class="task-header">
                         <span class="task-title">${escapeHtml(task.title)}</span>
                         <span class="task-priority priority-${task.priority}">${task.priority.toUpperCase()}</span>
                     </div>
+                    
                     ${task.description ? `<div class="task-description">${escapeHtml(task.description)}</div>` : ''}
+                    
+                    <div class="task-details">
+                        <div class="task-detail-item">
+                            <span class="detail-label">Reward</span>
+                            <span class="detail-value reward-value">${escapeHtml(task.reward)}</span>
+                        </div>
+                        <div class="task-detail-item">
+                            <span class="detail-label">Deadline</span>
+                            <span class="detail-value deadline-value ${isOverdue ? 'overdue' : ''}">${deadline}</span>
+                        </div>
+                        <div class="task-detail-item">
+                            <span class="detail-label">Created</span>
+                            <span class="detail-value">${new Date(task.createdAt).toLocaleDateString()}</span>
+                        </div>
+                        <div class="task-detail-item">
+                            <span class="detail-label">Status</span>
+                            <span class="detail-value">${task.completed ? 'Completed' : 'Active'}</span>
+                        </div>
+                    </div>
+                    
                     <div class="task-footer">
-                        <span>Created: ${new Date(task.createdAt).toLocaleDateString()}</span>
+                        <span>Created by: ${escapeHtml(task.userName || 'User')}</span>
                         <div class="task-actions">
                             <button class="complete-btn" onclick="toggleTask('${task.id}', ${task.completed})">
                                 ${task.completed ? 'Undo' : 'Complete'}
@@ -846,12 +1162,108 @@
                         </div>
                     </div>
                 </div>
-            `).join('');
+            `}).join('');
+        }
+
+        // Chat Functions
+        window.sendChatMessage = async function() {
+            if (!currentUser) return;
+            
+            const messageInput = document.getElementById('chatMessageInput');
+            const messageText = messageInput.value.trim();
+            
+            if (!messageText) return;
+            
+            try {
+                await addDoc(collection(db, 'chats'), {
+                    userId: currentUser.uid,
+                    userName: currentUser.displayName || 'User',
+                    userPhoto: currentUser.photoURL || 'https://via.placeholder.com/35',
+                    message: messageText,
+                    timestamp: serverTimestamp(),
+                    createdAt: new Date().toISOString()
+                });
+                
+                messageInput.value = '';
+            } catch (error) {
+                showMessage('Error sending message: ' + error.message, 'error');
+            }
+        };
+
+        window.handleChatKeyPress = function(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendChatMessage();
+            }
+        };
+
+        // Load chat messages
+        function loadChatMessages() {
+            if (!currentUser) return;
+            
+            // Unsubscribe from previous listener
+            if (chatUnsubscribe) {
+                chatUnsubscribe();
+            }
+            
+            const q = query(
+                collection(db, 'chats'),
+                orderBy('timestamp', 'desc'),
+                limit(50)
+            );
+            
+            chatUnsubscribe = onSnapshot(q, (snapshot) => {
+                const messages = [];
+                snapshot.forEach((doc) => {
+                    messages.push({
+                        id: doc.id,
+                        ...doc.data()
+                    });
+                });
+                
+                // Reverse to show oldest first
+                displayChatMessages(messages.reverse());
+            }, (error) => {
+                console.error('Error loading messages:', error);
+            });
+        }
+
+        // Display chat messages
+        function displayChatMessages(messages) {
+            const chatMessages = document.getElementById('chatMessages');
+            
+            if (messages.length === 0) {
+                chatMessages.innerHTML = '<div class="empty-state">No messages yet. Start the conversation!</div>';
+                return;
+            }
+            
+            chatMessages.innerHTML = messages.map(msg => {
+                const isOwnMessage = msg.userId === currentUser?.uid;
+                const time = msg.timestamp?.toDate ? 
+                    msg.timestamp.toDate().toLocaleTimeString() : 
+                    new Date(msg.createdAt).toLocaleTimeString();
+                
+                return `
+                <div class="message ${isOwnMessage ? 'own-message' : ''}">
+                    <img src="${escapeHtml(msg.userPhoto)}" alt="${escapeHtml(msg.userName)}" class="message-avatar">
+                    <div class="message-content">
+                        <div class="message-header">
+                            <span class="message-sender">${escapeHtml(msg.userName)}</span>
+                            <span class="message-time">${time}</span>
+                        </div>
+                        <div class="message-text">${escapeHtml(msg.message)}</div>
+                    </div>
+                </div>
+            `}).join('');
+            
+            // Scroll to bottom
+            chatMessages.scrollTop = chatMessages.scrollHeight;
         }
 
         // Helper function to escape HTML
         function escapeHtml(unsafe) {
-            return unsafe
+            if (!unsafe) return '';
+            return String(unsafe)
                 .replace(/&/g, "&amp;")
                 .replace(/</g, "&lt;")
                 .replace(/>/g, "&gt;")
@@ -859,17 +1271,18 @@
                 .replace(/'/g, "&#039;");
         }
 
-        // Update user info in task container
+        // Update user info
         function updateUserInfo(user) {
             currentUser = user;
             document.getElementById('authContainer').style.display = 'none';
-            document.getElementById('taskContainer').style.display = 'block';
+            document.getElementById('appContainer').style.display = 'block';
             
             document.getElementById('userName').textContent = user.displayName || 'User';
             document.getElementById('userPhoto').src = user.photoURL || 'https://via.placeholder.com/40';
             
-            // Load tasks for this user
+            // Load tasks and chat for this user
             loadTasks();
+            loadChatMessages();
         }
 
         // Check auth state
@@ -878,13 +1291,17 @@
                 updateUserInfo(user);
             } else {
                 currentUser = null;
-                // Unsubscribe from tasks listener
+                // Unsubscribe from listeners
                 if (tasksUnsubscribe) {
                     tasksUnsubscribe();
                     tasksUnsubscribe = null;
                 }
+                if (chatUnsubscribe) {
+                    chatUnsubscribe();
+                    chatUnsubscribe = null;
+                }
                 document.getElementById('authContainer').style.display = 'block';
-                document.getElementById('taskContainer').style.display = 'none';
+                document.getElementById('appContainer').style.display = 'none';
             }
         });
 
