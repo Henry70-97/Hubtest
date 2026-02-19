@@ -1,110 +1,905 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Task App</title>
-  <style>
-    body { font-family: Arial, sans-serif; margin: 20px; }
-    #feedback { margin: 10px 0; color: green; }
-    #error { margin: 10px 0; color: red; }
-    .task { border-bottom: 1px solid #ccc; padding: 10px 0; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firebase Task Manager</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Auth Container Styles */
+        .auth-container {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+            margin: 50px auto;
+        }
+
+        /* Task Container Styles */
+        .task-container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            display: none;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-profile img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .user-profile span {
+            font-weight: 500;
+            color: #333;
+        }
+
+        .logout-btn {
+            padding: 8px 16px;
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .logout-btn:hover {
+            background: #c82333;
+        }
+
+        /* Task Form Styles */
+        .task-form {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+
+        .task-form h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .form-group textarea {
+            height: 80px;
+            resize: vertical;
+        }
+
+        .add-task-btn {
+            padding: 10px 20px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .add-task-btn:hover {
+            background: #218838;
+        }
+
+        /* Tasks Section */
+        .tasks-section {
+            margin-top: 20px;
+        }
+
+        .tasks-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .filter-options {
+            display: flex;
+            gap: 10px;
+        }
+
+        .filter-options select {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .task-stats {
+            color: #666;
+            font-size: 14px;
+        }
+
+        /* Task Cards */
+        .tasks-list {
+            display: grid;
+            gap: 15px;
+        }
+
+        .task-card {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .task-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .task-card.completed {
+            background: #f8f9fa;
+            opacity: 0.8;
+        }
+
+        .task-card.completed .task-title {
+            text-decoration: line-through;
+            color: #6c757d;
+        }
+
+        .task-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+
+        .task-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .task-priority {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .priority-high {
+            background: #dc3545;
+            color: white;
+        }
+
+        .priority-medium {
+            background: #ffc107;
+            color: #333;
+        }
+
+        .priority-low {
+            background: #28a745;
+            color: white;
+        }
+
+        .task-description {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .task-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: #999;
+        }
+
+        .task-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .task-actions button {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: background 0.2s;
+        }
+
+        .complete-btn {
+            background: #28a745;
+            color: white;
+        }
+
+        .complete-btn:hover {
+            background: #218838;
+        }
+
+        .delete-btn {
+            background: #dc3545;
+            color: white;
+        }
+
+        .delete-btn:hover {
+            background: #c82333;
+        }
+
+        .edit-btn {
+            background: #ffc107;
+            color: #333;
+        }
+
+        .edit-btn:hover {
+            background: #e0a800;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        /* Login/Register Form Styles (kept from previous) */
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        input, button {
+            width: 100%;
+            padding: 12px;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        input {
+            border: 1px solid #ddd;
+            margin-bottom: 15px;
+        }
+
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-bottom: 10px;
+        }
+
+        button:hover {
+            background: #5a67d8;
+        }
+
+        .google-btn {
+            background: #db4437;
+        }
+
+        .google-btn:hover {
+            background: #c53929;
+        }
+
+        .message {
+            padding: 12px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            text-align: center;
+            display: none;
+        }
+
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .separator {
+            text-align: center;
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .separator::before,
+        .separator::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 45%;
+            height: 1px;
+            background: #ddd;
+        }
+
+        .separator::before {
+            left: 0;
+        }
+
+        .separator::after {
+            right: 0;
+        }
+
+        .separator span {
+            background: white;
+            padding: 0 10px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .toggle-form {
+            text-align: center;
+            margin-top: 15px;
+            color: #666;
+        }
+
+        .toggle-form a {
+            color: #667eea;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .toggle-form a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
-
-<h2>Login</h2>
-<input id="email" placeholder="Email"><br><br>
-<input id="password" type="password" placeholder="Password"><br><br>
-<button onclick="login()">Login</button>
-
-<div id="feedback"></div>
-<div id="error"></div>
-
-<hr>
-
-<h2>Tasks</h2>
-<div id="tasks"></div>
-
-<script type="module">
-  // Import Firebase functions
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase.js";
-  import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
-  import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
-
-  // Firebase config
-  const firebaseConfig = {
-    apiKey: "AIzaSyCkMZJ6A8-15Is1DDSIbr9Wk7LgTN14hRQ",
-    authDomain: "nextgen-5fb6f.firebaseapp.com",
-    projectId: "nextgen-5fb6f",
-    storageBucket: "nextgen-5fb6f.firebasestorage.app",
-    messagingSenderId: "100132074455",
-    appId: "1:100132074455:web:c5aeef16e1a5ebbea99482"
-  };
-
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth();
-  const db = getFirestore();
-
-  const feedbackDiv = document.getElementById("feedback");
-  const errorDiv = document.getElementById("error");
-
-  // LOGIN FUNCTION
-  window.login = async function () {
-    feedbackDiv.textContent = "";
-    errorDiv.textContent = "";
-
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
-
-    if (!email || !password) {
-      errorDiv.textContent = "Please enter both email and password.";
-      return;
-    }
-
-    try {
-      await signInWithEmailAndPassword(auth, email, password);
-      feedbackDiv.textContent = "Logged in successfully!";
-      await loadTasks(); // load tasks immediately after login
-    } catch (e) {
-      errorDiv.textContent = "Login failed: " + e.message;
-    }
-  };
-
-  // LOAD TASKS FUNCTION
-  async function loadTasks() {
-    const tasksDiv = document.getElementById("tasks");
-    tasksDiv.innerHTML = "";
-    feedbackDiv.textContent = "Loading tasks...";
-    errorDiv.textContent = "";
-
-    try {
-      const querySnapshot = await getDocs(collection(db, "tasks"));
-      let taskCount = 0;
-
-      querySnapshot.forEach(doc => {
-        const task = doc.data();
-        if (task.status === "open") {
-          tasksDiv.innerHTML += `
-            <div class="task">
-              <b>${task.title}</b><br>
-              ${task.description}<br>
-              Reward: ${task.reward}
+    <div class="container">
+        <!-- Auth Container (Login/Register) -->
+        <div id="authContainer" class="auth-container">
+            <h2>Firebase Task Manager</h2>
+            
+            <div id="message" class="message"></div>
+            
+            <!-- Login Form -->
+            <div id="loginForm">
+                <div class="form-group">
+                    <input type="email" id="loginEmail" placeholder="Email" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" id="loginPassword" placeholder="Password" required>
+                </div>
+                <button onclick="loginWithEmail()">Login with Email</button>
+                
+                <div class="separator">
+                    <span>OR</span>
+                </div>
+                
+                <button class="google-btn" onclick="loginWithGoogle()">Login with Google</button>
+                
+                <div class="toggle-form">
+                    Don't have an account? <a onclick="showRegister()">Register here</a>
+                </div>
             </div>
-          `;
-          taskCount++;
+            
+            <!-- Register Form -->
+            <div id="registerForm" style="display: none;">
+                <div class="form-group">
+                    <input type="text" id="registerName" placeholder="Full Name" required>
+                </div>
+                <div class="form-group">
+                    <input type="email" id="registerEmail" placeholder="Email" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" id="registerPassword" placeholder="Password" required>
+                </div>
+                <button onclick="registerWithEmail()">Register</button>
+                
+                <div class="separator">
+                    <span>OR</span>
+                </div>
+                
+                <button class="google-btn" onclick="loginWithGoogle()">Register with Google</button>
+                
+                <div class="toggle-form">
+                    Already have an account? <a onclick="showLogin()">Login here</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Task Container (Shown after login) -->
+        <div id="taskContainer" class="task-container">
+            <div class="header">
+                <h2>My Tasks</h2>
+                <div class="user-profile">
+                    <img id="userPhoto" src="https://via.placeholder.com/40" alt="Profile">
+                    <span id="userName"></span>
+                    <button class="logout-btn" onclick="logout()">Logout</button>
+                </div>
+            </div>
+
+            <!-- Add Task Form -->
+            <div class="task-form">
+                <h3>Add New Task</h3>
+                <div class="form-group">
+                    <input type="text" id="taskTitle" placeholder="Task title" required>
+                </div>
+                <div class="form-group">
+                    <textarea id="taskDescription" placeholder="Task description"></textarea>
+                </div>
+                <div class="form-group">
+                    <select id="taskPriority">
+                        <option value="low">Low Priority</option>
+                        <option value="medium" selected>Medium Priority</option>
+                        <option value="high">High Priority</option>
+                    </select>
+                </div>
+                <button class="add-task-btn" onclick="addTask()">Add Task</button>
+            </div>
+
+            <!-- Tasks List -->
+            <div class="tasks-section">
+                <div class="tasks-header">
+                    <div class="task-stats" id="taskStats">Loading tasks...</div>
+                    <div class="filter-options">
+                        <select id="priorityFilter" onchange="filterTasks()">
+                            <option value="all">All Priorities</option>
+                            <option value="high">High Priority</option>
+                            <option value="medium">Medium Priority</option>
+                            <option value="low">Low Priority</option>
+                        </select>
+                        <select id="statusFilter" onchange="filterTasks()">
+                            <option value="all">All Tasks</option>
+                            <option value="active">Active</option>
+                            <option value="completed">Completed</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="tasksList" class="tasks-list">
+                    <!-- Tasks will be dynamically added here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script type="module">
+        // Import Firebase modules
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
+        import { 
+            getAuth, 
+            signInWithEmailAndPassword,
+            createUserWithEmailAndPassword,
+            signInWithPopup,
+            GoogleAuthProvider,
+            signOut,
+            onAuthStateChanged,
+            updateProfile
+        } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
+        
+        import {
+            getFirestore,
+            collection,
+            addDoc,
+            query,
+            where,
+            orderBy,
+            onSnapshot,
+            updateDoc,
+            deleteDoc,
+            doc,
+            getDocs
+        } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyChk2JA68-I5s1D0S10r9WK71LgTNi4hRQ",
+            authDomain: "nextgen-5fb6f.firebaseapp.com",
+            projectId: "nextgen-5fb6f",
+            storageBucket: "nextgen-5fb6f.firebasestorage.app",
+            messagingSenderId: "100132076455",
+            appId: "1:100132076455:web:c5aea1f6e1a5ebbea99482"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const provider = new GoogleAuthProvider();
+
+        // Configure Google provider
+        provider.setCustomParameters({
+            prompt: 'select_account'
+        });
+
+        // Global variables
+        let currentUser = null;
+        let tasksUnsubscribe = null;
+        let currentFilter = {
+            priority: 'all',
+            status: 'all'
+        };
+
+        // Show message function
+        window.showMessage = function(text, type) {
+            const messageDiv = document.getElementById('message');
+            messageDiv.textContent = text;
+            messageDiv.className = `message ${type}`;
+            messageDiv.style.display = 'block';
+            
+            setTimeout(() => {
+                messageDiv.style.display = 'none';
+            }, 5000);
+        };
+
+        // Login with email
+        window.loginWithEmail = function() {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            if (!email || !password) {
+                showMessage('Please fill in all fields', 'error');
+                return;
+            }
+            
+            signInWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    showMessage('Login successful! Welcome back!', 'success');
+                })
+                .catch((error) => {
+                    handleAuthError(error);
+                });
+        };
+
+        // Register with email
+        window.registerWithEmail = function() {
+            const name = document.getElementById('registerName').value;
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            
+            if (!name || !email || !password) {
+                showMessage('Please fill in all fields', 'error');
+                return;
+            }
+            
+            if (password.length < 6) {
+                showMessage('Password should be at least 6 characters', 'error');
+                return;
+            }
+            
+            createUserWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    return updateProfile(userCredential.user, {
+                        displayName: name
+                    }).then(() => {
+                        showMessage('Registration successful! Welcome!', 'success');
+                    });
+                })
+                .catch((error) => {
+                    handleAuthError(error);
+                });
+        };
+
+        // Login with Google
+        window.loginWithGoogle = function() {
+            signInWithPopup(auth, provider)
+                .then((result) => {
+                    showMessage('Google login successful! Welcome!', 'success');
+                })
+                .catch((error) => {
+                    handleAuthError(error);
+                });
+        };
+
+        // Logout
+        window.logout = function() {
+            // Unsubscribe from tasks listener
+            if (tasksUnsubscribe) {
+                tasksUnsubscribe();
+                tasksUnsubscribe = null;
+            }
+            
+            signOut(auth).then(() => {
+                showMessage('Logged out successfully', 'info');
+                document.getElementById('authContainer').style.display = 'block';
+                document.getElementById('taskContainer').style.display = 'none';
+                
+                // Clear input fields
+                document.getElementById('loginEmail').value = '';
+                document.getElementById('loginPassword').value = '';
+                document.getElementById('registerName').value = '';
+                document.getElementById('registerEmail').value = '';
+                document.getElementById('registerPassword').value = '';
+                document.getElementById('taskTitle').value = '';
+                document.getElementById('taskDescription').value = '';
+            }).catch((error) => {
+                showMessage(error.message, 'error');
+            });
+        };
+
+        // Handle authentication errors
+        function handleAuthError(error) {
+            let errorMessage = error.message;
+            
+            if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+                errorMessage = 'Invalid email or password';
+            } else if (error.code === 'auth/email-already-in-use') {
+                errorMessage = 'Email is already registered';
+            } else if (error.code === 'auth/weak-password') {
+                errorMessage = 'Password should be at least 6 characters';
+            } else if (error.code === 'auth/invalid-email') {
+                errorMessage = 'Invalid email address';
+            } else if (error.code === 'auth/popup-closed-by-user') {
+                errorMessage = 'Sign-in popup was closed';
+            } else if (error.code === 'auth/unauthorized-domain') {
+                errorMessage = 'This domain is not authorized for Firebase authentication';
+            }
+            
+            showMessage(errorMessage, 'error');
         }
-      });
 
-      if (taskCount === 0) {
-        tasksDiv.innerHTML = "<p>No open tasks available.</p>";
-      }
+        // Add task
+        window.addTask = async function() {
+            if (!currentUser) return;
+            
+            const title = document.getElementById('taskTitle').value.trim();
+            const description = document.getElementById('taskDescription').value.trim();
+            const priority = document.getElementById('taskPriority').value;
+            
+            if (!title) {
+                showMessage('Please enter a task title', 'error');
+                return;
+            }
+            
+            try {
+                await addDoc(collection(db, 'tasks'), {
+                    userId: currentUser.uid,
+                    title: title,
+                    description: description,
+                    priority: priority,
+                    completed: false,
+                    createdAt: new Date().toISOString()
+                });
+                
+                // Clear form
+                document.getElementById('taskTitle').value = '';
+                document.getElementById('taskDescription').value = '';
+                document.getElementById('taskPriority').value = 'medium';
+                
+                showMessage('Task added successfully!', 'success');
+            } catch (error) {
+                showMessage('Error adding task: ' + error.message, 'error');
+            }
+        };
 
-      feedbackDiv.textContent = "Tasks loaded successfully!";
-    } catch (e) {
-      errorDiv.textContent = "Failed to load tasks: " + e.message;
-    }
-  }
-</script>
+        // Toggle task completion
+        window.toggleTask = async function(taskId, currentStatus) {
+            try {
+                await updateDoc(doc(db, 'tasks', taskId), {
+                    completed: !currentStatus
+                });
+            } catch (error) {
+                showMessage('Error updating task: ' + error.message, 'error');
+            }
+        };
 
+        // Delete task
+        window.deleteTask = async function(taskId) {
+            if (confirm('Are you sure you want to delete this task?')) {
+                try {
+                    await deleteDoc(doc(db, 'tasks', taskId));
+                    showMessage('Task deleted successfully!', 'success');
+                } catch (error) {
+                    showMessage('Error deleting task: ' + error.message, 'error');
+                }
+            }
+        };
+
+        // Edit task
+        window.editTask = async function(taskId) {
+            const newTitle = prompt('Enter new title:');
+            if (newTitle === null) return;
+            
+            if (!newTitle.trim()) {
+                showMessage('Task title cannot be empty', 'error');
+                return;
+            }
+            
+            try {
+                await updateDoc(doc(db, 'tasks', taskId), {
+                    title: newTitle.trim()
+                });
+                showMessage('Task updated successfully!', 'success');
+            } catch (error) {
+                showMessage('Error updating task: ' + error.message, 'error');
+            }
+        };
+
+        // Filter tasks
+        window.filterTasks = function() {
+            currentFilter.priority = document.getElementById('priorityFilter').value;
+            currentFilter.status = document.getElementById('statusFilter').value;
+            loadTasks();
+        };
+
+        // Load and display tasks
+        function loadTasks() {
+            if (!currentUser) return;
+            
+            // Unsubscribe from previous listener
+            if (tasksUnsubscribe) {
+                tasksUnsubscribe();
+            }
+            
+            // Create query
+            let q = query(
+                collection(db, 'tasks'),
+                where('userId', '==', currentUser.uid),
+                orderBy('createdAt', 'desc')
+            );
+            
+            // Subscribe to real-time updates
+            tasksUnsubscribe = onSnapshot(q, (snapshot) => {
+                let tasks = [];
+                snapshot.forEach((doc) => {
+                    tasks.push({
+                        id: doc.id,
+                        ...doc.data()
+                    });
+                });
+                
+                // Apply filters
+                if (currentFilter.priority !== 'all') {
+                    tasks = tasks.filter(task => task.priority === currentFilter.priority);
+                }
+                
+                if (currentFilter.status === 'active') {
+                    tasks = tasks.filter(task => !task.completed);
+                } else if (currentFilter.status === 'completed') {
+                    tasks = tasks.filter(task => task.completed);
+                }
+                
+                displayTasks(tasks);
+            }, (error) => {
+                console.error('Error loading tasks:', error);
+                showMessage('Error loading tasks: ' + error.message, 'error');
+            });
+        }
+
+        // Display tasks in the UI
+        function displayTasks(tasks) {
+            const tasksList = document.getElementById('tasksList');
+            const taskStats = document.getElementById('taskStats');
+            
+            if (tasks.length === 0) {
+                tasksList.innerHTML = '<div class="empty-state">No tasks found. Create your first task above!</div>';
+                taskStats.textContent = '0 tasks';
+                return;
+            }
+            
+            const completedCount = tasks.filter(t => t.completed).length;
+            taskStats.textContent = `${tasks.length} total (${completedCount} completed)`;
+            
+            tasksList.innerHTML = tasks.map(task => `
+                <div class="task-card ${task.completed ? 'completed' : ''}">
+                    <div class="task-header">
+                        <span class="task-title">${escapeHtml(task.title)}</span>
+                        <span class="task-priority priority-${task.priority}">${task.priority.toUpperCase()}</span>
+                    </div>
+                    ${task.description ? `<div class="task-description">${escapeHtml(task.description)}</div>` : ''}
+                    <div class="task-footer">
+                        <span>Created: ${new Date(task.createdAt).toLocaleDateString()}</span>
+                        <div class="task-actions">
+                            <button class="complete-btn" onclick="toggleTask('${task.id}', ${task.completed})">
+                                ${task.completed ? 'Undo' : 'Complete'}
+                            </button>
+                            <button class="edit-btn" onclick="editTask('${task.id}')">Edit</button>
+                            <button class="delete-btn" onclick="deleteTask('${task.id}')">Delete</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Helper function to escape HTML
+        function escapeHtml(unsafe) {
+            return unsafe
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        // Update user info in task container
+        function updateUserInfo(user) {
+            currentUser = user;
+            document.getElementById('authContainer').style.display = 'none';
+            document.getElementById('taskContainer').style.display = 'block';
+            
+            document.getElementById('userName').textContent = user.displayName || 'User';
+            document.getElementById('userPhoto').src = user.photoURL || 'https://via.placeholder.com/40';
+            
+            // Load tasks for this user
+            loadTasks();
+        }
+
+        // Check auth state
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                updateUserInfo(user);
+            } else {
+                currentUser = null;
+                // Unsubscribe from tasks listener
+                if (tasksUnsubscribe) {
+                    tasksUnsubscribe();
+                    tasksUnsubscribe = null;
+                }
+                document.getElementById('authContainer').style.display = 'block';
+                document.getElementById('taskContainer').style.display = 'none';
+            }
+        });
+
+        // Toggle forms
+        window.showRegister = function() {
+            document.getElementById('loginForm').style.display = 'none';
+            document.getElementById('registerForm').style.display = 'block';
+            document.getElementById('message').style.display = 'none';
+        };
+
+        window.showLogin = function() {
+            document.getElementById('loginForm').style.display = 'block';
+            document.getElementById('registerForm').style.display = 'none';
+            document.getElementById('message').style.display = 'none';
+        };
+    </script>
 </body>
 </html>
