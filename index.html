@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Task App</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    #feedback { margin: 10px 0; color: green; }
+    #error { margin: 10px 0; color: red; }
+    .task { border-bottom: 1px solid #ccc; padding: 10px 0; }
+  </style>
+</head>
+<body>
+
+<h2>Login</h2>
+<input id="email" placeholder="Email"><br><br>
+<input id="password" type="password" placeholder="Password"><br><br>
+<button onclick="login()">Login</button>
+
+<div id="feedback"></div>
+<div id="error"></div>
+
+<hr>
+
+<h2>Tasks</h2>
+<div id="tasks"></div>
+
+<script type="module">
+  // Import Firebase functions
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase.js";
+  import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
+  import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+
+  // Firebase config
+  const firebaseConfig = {
+    apiKey: "AIzaSyCkMZJ6A8-15Is1DDSIbr9Wk7LgTN14hRQ",
+    authDomain: "nextgen-5fb6f.firebaseapp.com",
+    projectId: "nextgen-5fb6f",
+    storageBucket: "nextgen-5fb6f.firebasestorage.app",
+    messagingSenderId: "100132074455",
+    appId: "1:100132074455:web:c5aeef16e1a5ebbea99482"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth();
+  const db = getFirestore();
+
+  const feedbackDiv = document.getElementById("feedback");
+  const errorDiv = document.getElementById("error");
+
+  // LOGIN FUNCTION
+  window.login = async function () {
+    feedbackDiv.textContent = "";
+    errorDiv.textContent = "";
+
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+
+    if (!email || !password) {
+      errorDiv.textContent = "Please enter both email and password.";
+      return;
+    }
+
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      feedbackDiv.textContent = "Logged in successfully!";
+      await loadTasks(); // load tasks immediately after login
+    } catch (e) {
+      errorDiv.textContent = "Login failed: " + e.message;
+    }
+  };
+
+  // LOAD TASKS FUNCTION
+  async function loadTasks() {
+    const tasksDiv = document.getElementById("tasks");
+    tasksDiv.innerHTML = "";
+    feedbackDiv.textContent = "Loading tasks...";
+    errorDiv.textContent = "";
+
+    try {
+      const querySnapshot = await getDocs(collection(db, "tasks"));
+      let taskCount = 0;
+
+      querySnapshot.forEach(doc => {
+        const task = doc.data();
+        if (task.status === "open") {
+          tasksDiv.innerHTML += `
+            <div class="task">
+              <b>${task.title}</b><br>
+              ${task.description}<br>
+              Reward: ${task.reward}
+            </div>
+          `;
+          taskCount++;
+        }
+      });
+
+      if (taskCount === 0) {
+        tasksDiv.innerHTML = "<p>No open tasks available.</p>";
+      }
+
+      feedbackDiv.textContent = "Tasks loaded successfully!";
+    } catch (e) {
+      errorDiv.textContent = "Failed to load tasks: " + e.message;
+    }
+  }
+</script>
+
+</body>
+</html>
