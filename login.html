@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - TaskMaster</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .login-container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+            padding: 40px;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo a {
+            color: #667eea;
+            font-size: 2rem;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-bottom: 15px;
+        }
+
+        .btn:hover {
+            background: #5a67d8;
+        }
+
+        .btn:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+        }
+
+        .btn-google {
+            background: #db4437;
+        }
+
+        .btn-google:hover {
+            background: #c53929;
+        }
+
+        .separator {
+            text-align: center;
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .separator::before,
+        .separator::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 45%;
+            height: 1px;
+            background: #ddd;
+        }
+
+        .separator::before {
+            left: 0;
+        }
+
+        .separator::after {
+            right: 0;
+        }
+
+        .separator span {
+            background: white;
+            padding: 0 10px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .register-link {
+            text-align: center;
+            margin-top: 20px;
+            color: #666;
+        }
+
+        .register-link a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+
+        .message {
+            padding: 12px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            text-align: center;
+            display: none;
+        }
+
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .message.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .message.warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeeba;
+        }
+
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .forgot-password {
+            text-align: right;
+            margin-top: 10px;
+        }
+
+        .forgot-password a {
+            color: #667eea;
+            text-decoration: none;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <div class="login-container">
+        <div class="logo">
+            <a href="index.html">TaskMaster</a>
+        </div>
+
+        <div id="message" class="message"></div>
+
+        <h2>Welcome Back!</h2>
+
+        <div class="form-group">
+            <label>Email Address</label>
+            <input type="email" id="email" placeholder="Enter your email" required>
+        </div>
+
+        <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="password" placeholder="Enter your password" required>
+        </div>
+
+        <div class="forgot-password">
+            <a href="#">Forgot Password?</a>
+        </div>
+
+        <button class="btn" onclick="loginWithEmail()" id="loginBtn">Login</button>
+
+        <div class="separator">
+            <span>or</span>
+        </div>
+
+        <button class="btn btn-google" onclick="loginWithGoogle()" id="googleBtn">Continue with Google</button>
+
+        <div class="register-link">
+            Don't have an account? <a href="register.html">Sign up here</a>
+        </div>
+    </div>
+
+    <script type="module">
+        import { 
+            auth,
+            signInWithEmailAndPassword,
+            signInWithPopup,
+            googleProvider,
+            sendEmailVerification,
+            signOut,
+            onAuthStateChanged
+        } from './js/firebase-config.js';
+
+        // Show loading overlay
+        function showLoading(show = true) {
+            document.getElementById('loadingOverlay').style.display = show ? 'flex' : 'none';
+        }
+
+        // Show message
+        function showMessage(text, type) {
+            const messageDiv = document.getElementById('message');
+            messageDiv.textContent = text;
+            messageDiv.className = `message ${type}`;
+            messageDiv.style.display = 'block';
+            
+            setTimeout(() => {
+                messageDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        // Login with email
+        window.loginWithEmail = async function() {
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+
+            if (!email || !password) {
+                showMessage('Please fill in all fields', 'error');
+                return;
+            }
+
+            showLoading(true);
+            document.getElementById('loginBtn').disabled = true;
+
+            try {
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                
+                // Check if email is verified
+                if (!userCredential.user.emailVerified) {
+                    // Resend verification email
+                    await sendEmailVerification(userCredential.user);
+                    await signOut(auth);
+                    
+                    showMessage('Please verify your email. A new verification link has been sent.', 'warning');
+                    
+                    // Redirect to verification page after 3 seconds
+                    setTimeout(() => {
+                        window.location.href = 'register.html?verify=' + encodeURIComponent(email);
+                    }, 3000);
+                    
+                    return;
+                }
+
+                // Check if user is admin
+                const isAdmin = checkIfAdmin(email);
+                
+                // Redirect based on role
+                if (isAdmin) {
+                    window.location.href = 'admin.html';
+                } else {
+                    window.location.href = 'dashboard.html';
+                }
+
+            } catch (error) {
+                console.error('Login error:', error);
+                let errorMessage = error.message;
+                
+                if (error.code === 'auth/user-not-found') {
+                    errorMessage = 'No account found with this email';
+                } else if (error.code === 'auth/wrong-password') {
+                    errorMessage = 'Incorrect password';
+                } else if (error.code === 'auth/invalid-email') {
+                    errorMessage = 'Invalid email address';
+                } else if (error.code === 'auth/too-many-requests') {
+                    errorMessage = 'Too many failed attempts. Please try again later.';
+                }
+                
+                showMessage(errorMessage, 'error');
+            } finally {
+                showLoading(false);
+                document.getElementById('loginBtn').disabled = false;
+            }
+        };
+
+        // Login with Google
+        window.loginWithGoogle = async function() {
+            showLoading(true);
+            document.getElementById('googleBtn').disabled = true;
+
+            try {
+                const result = await signInWithPopup(auth, googleProvider);
+                
+                if (!result.user.emailVerified) {
+                    showMessage('Your Google email is not verified.', 'error');
+                    await signOut(auth);
+                    return;
+                }
+
+                // Check if user is admin
+                const isAdmin = checkIfAdmin(result.user.email);
+                
+                // Redirect based on role
+                if (isAdmin) {
+                    window.location.href = 'admin.html';
+                } else {
+                    window.location.href = 'dashboard.html';
+                }
+
+            } catch (error) {
+                console.error('Google login error:', error);
+                showMessage(error.message, 'error');
+            } finally {
+                showLoading(false);
+                document.getElementById('googleBtn').disabled = false;
+            }
+        };
+
+        // Check if user is admin (you can modify this logic)
+        function checkIfAdmin(email) {
+            const adminEmails = ['admin@taskmaster.com', 'your-email@example.com']; // Add admin emails here
+            return adminEmails.includes(email);
+        }
+
+        // Check if user is already logged in
+        onAuthStateChanged(auth, (user) => {
+            if (user && user.emailVerified) {
+                const isAdmin = checkIfAdmin(user.email);
+                if (isAdmin) {
+                    window.location.href = 'admin.html';
+                } else {
+                    window.location.href = 'dashboard.html';
+                }
+            }
+        });
+    </script>
+</body>
+</html>
