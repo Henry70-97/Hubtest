@@ -90,6 +90,34 @@
             background: rgba(255,255,255,0.3);
         }
 
+        /* Loading Overlay */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
         /* Main Content Layout */
         .main-content {
             display: grid;
@@ -171,6 +199,11 @@
             background: #218838;
         }
 
+        .add-task-btn:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+        }
+
         /* Filters */
         .filters {
             display: flex;
@@ -199,6 +232,28 @@
             margin-bottom: 20px;
             font-size: 14px;
             color: #495057;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .refresh-btn {
+            padding: 5px 10px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .refresh-btn:hover {
+            background: #5a67d8;
+        }
+
+        .refresh-btn:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
         }
 
         /* Task Cards */
@@ -231,6 +286,10 @@
         .task-card.completed .task-title {
             text-decoration: line-through;
             color: #6c757d;
+        }
+
+        .task-card.overdue {
+            border-left: 4px solid #dc3545;
         }
 
         .task-header {
@@ -311,6 +370,11 @@
             color: #dc3545;
         }
 
+        .deadline-value.overdue {
+            color: #dc3545;
+            font-weight: 600;
+        }
+
         .task-footer {
             display: flex;
             justify-content: space-between;
@@ -333,12 +397,17 @@
             transition: background 0.2s;
         }
 
+        .task-actions button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
         .complete-btn {
             background: #28a745;
             color: white;
         }
 
-        .complete-btn:hover {
+        .complete-btn:hover:not(:disabled) {
             background: #218838;
         }
 
@@ -347,7 +416,7 @@
             color: white;
         }
 
-        .delete-btn:hover {
+        .delete-btn:hover:not(:disabled) {
             background: #c82333;
         }
 
@@ -356,17 +425,8 @@
             color: #333;
         }
 
-        .edit-btn:hover {
+        .edit-btn:hover:not(:disabled) {
             background: #e0a800;
-        }
-
-        .chat-btn {
-            background: #17a2b8;
-            color: white;
-        }
-
-        .chat-btn:hover {
-            background: #138496;
         }
 
         /* Chat Section */
@@ -481,6 +541,11 @@
             border-color: #667eea;
         }
 
+        .chat-input-group input:disabled {
+            background: #e9ecef;
+            cursor: not-allowed;
+        }
+
         .send-btn {
             padding: 10px 20px;
             background: #667eea;
@@ -491,8 +556,13 @@
             font-size: 14px;
         }
 
-        .send-btn:hover {
+        .send-btn:hover:not(:disabled) {
             background: #5a67d8;
+        }
+
+        .send-btn:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
         }
 
         .empty-state {
@@ -503,7 +573,7 @@
             border-radius: 8px;
         }
 
-        /* Message Styles (from previous) */
+        /* Message Styles */
         .message {
             padding: 12px;
             border-radius: 5px;
@@ -530,6 +600,41 @@
             border: 1px solid #bee5eb;
         }
 
+        .warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeeba;
+        }
+
+        /* Email Verification Banner */
+        .verification-banner {
+            background: #fff3cd;
+            color: #856404;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #ffeeba;
+        }
+
+        .verification-banner button {
+            padding: 8px 16px;
+            background: #856404;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .verification-banner button:hover:not(:disabled) {
+            background: #6d5304;
+        }
+
+        .verification-banner button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
         /* Auth Form Styles */
         h2 {
             text-align: center;
@@ -537,19 +642,20 @@
             margin-bottom: 30px;
         }
 
-        input, button {
+        .auth-container input,
+        .auth-container button {
             width: 100%;
             padding: 12px;
             border-radius: 5px;
             font-size: 16px;
         }
 
-        input {
+        .auth-container input {
             border: 1px solid #ddd;
             margin-bottom: 15px;
         }
 
-        button {
+        .auth-container button {
             background: #667eea;
             color: white;
             border: none;
@@ -558,15 +664,20 @@
             margin-bottom: 10px;
         }
 
-        button:hover {
+        .auth-container button:hover:not(:disabled) {
             background: #5a67d8;
+        }
+
+        .auth-container button:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
         }
 
         .google-btn {
             background: #db4437;
         }
 
-        .google-btn:hover {
+        .google-btn:hover:not(:disabled) {
             background: #c53929;
         }
 
@@ -620,6 +731,11 @@
 </head>
 <body>
     <div class="container">
+        <!-- Loading Overlay -->
+        <div id="loadingOverlay" class="loading-overlay">
+            <div class="loading-spinner"></div>
+        </div>
+
         <!-- Auth Container (Login/Register) -->
         <div id="authContainer" class="auth-container">
             <h2>Task Manager with Chat</h2>
@@ -634,13 +750,13 @@
                 <div class="form-group">
                     <input type="password" id="loginPassword" placeholder="Password" required>
                 </div>
-                <button onclick="loginWithEmail()">Login with Email</button>
+                <button onclick="loginWithEmail()" id="loginBtn">Login with Email</button>
                 
                 <div class="separator">
                     <span>OR</span>
                 </div>
                 
-                <button class="google-btn" onclick="loginWithGoogle()">Login with Google</button>
+                <button class="google-btn" onclick="loginWithGoogle()" id="googleLoginBtn">Login with Google</button>
                 
                 <div class="toggle-form">
                     Don't have an account? <a onclick="showRegister()">Register here</a>
@@ -656,15 +772,15 @@
                     <input type="email" id="registerEmail" placeholder="Email" required>
                 </div>
                 <div class="form-group">
-                    <input type="password" id="registerPassword" placeholder="Password" required>
+                    <input type="password" id="registerPassword" placeholder="Password (min 6 characters)" required>
                 </div>
-                <button onclick="registerWithEmail()">Register</button>
+                <button onclick="registerWithEmail()" id="registerBtn">Register</button>
                 
                 <div class="separator">
                     <span>OR</span>
                 </div>
                 
-                <button class="google-btn" onclick="loginWithGoogle()">Register with Google</button>
+                <button class="google-btn" onclick="loginWithGoogle()" id="googleRegisterBtn">Register with Google</button>
                 
                 <div class="toggle-form">
                     Already have an account? <a onclick="showLogin()">Login here</a>
@@ -674,6 +790,12 @@
 
         <!-- Main App Container (Shown after login) -->
         <div id="appContainer" class="app-container">
+            <!-- Email Verification Banner -->
+            <div id="verificationBanner" class="verification-banner" style="display: none;">
+                <span>⚠️ Please verify your email address. Check your inbox for the verification link.</span>
+                <button onclick="resendVerificationEmail()" id="resendVerificationBtn">Resend Verification Email</button>
+            </div>
+
             <div class="header">
                 <h1>Task Manager & Chat</h1>
                 <div class="user-profile">
@@ -721,7 +843,7 @@
                             </select>
                         </div>
                         
-                        <button class="add-task-btn" onclick="addTask()">Create Task</button>
+                        <button class="add-task-btn" onclick="addTask()" id="addTaskBtn">Create Task</button>
                     </div>
 
                     <!-- Filters -->
@@ -744,7 +866,10 @@
                     </div>
 
                     <!-- Task Stats -->
-                    <div class="task-stats" id="taskStats">Loading tasks...</div>
+                    <div class="task-stats" id="taskStats">
+                        <span>Loading tasks...</span>
+                        <button class="refresh-btn" onclick="loadTasks()" id="refreshTasksBtn">Refresh</button>
+                    </div>
 
                     <!-- Tasks List -->
                     <div id="tasksList" class="tasks-list">
@@ -765,8 +890,8 @@
                     
                     <div class="chat-input-area">
                         <div class="chat-input-group">
-                            <input type="text" id="chatMessageInput" placeholder="Type your message..." onkeypress="handleChatKeyPress(event)">
-                            <button class="send-btn" onclick="sendChatMessage()">Send</button>
+                            <input type="text" id="chatMessageInput" placeholder="Type your message..." onkeypress="handleChatKeyPress(event)" disabled>
+                            <button class="send-btn" onclick="sendChatMessage()" id="sendChatBtn" disabled>Send</button>
                         </div>
                     </div>
                 </div>
@@ -786,7 +911,9 @@
             GoogleAuthProvider,
             signOut,
             onAuthStateChanged,
-            updateProfile
+            updateProfile,
+            sendEmailVerification,
+            reload
         } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
         
         import {
@@ -800,9 +927,9 @@
             updateDoc,
             deleteDoc,
             doc,
-            getDocs,
             serverTimestamp,
-            limit
+            limit,
+            getDocs
         } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
 
         // Firebase configuration
@@ -834,6 +961,28 @@
             priority: 'all',
             status: 'all'
         };
+        let isVerificationSent = false;
+
+        // Show loading overlay
+        function showLoading(show = true) {
+            document.getElementById('loadingOverlay').style.display = show ? 'flex' : 'none';
+        }
+
+        // Disable/enable form buttons
+        function setButtonsDisabled(disabled) {
+            const buttons = [
+                'loginBtn', 'googleLoginBtn', 'registerBtn', 'googleRegisterBtn',
+                'addTaskBtn', 'refreshTasksBtn', 'sendChatBtn', 'resendVerificationBtn'
+            ];
+            
+            buttons.forEach(id => {
+                const btn = document.getElementById(id);
+                if (btn) btn.disabled = disabled;
+            });
+
+            const chatInput = document.getElementById('chatMessageInput');
+            if (chatInput) chatInput.disabled = disabled;
+        }
 
         // Show message function
         window.showMessage = function(text, type) {
@@ -848,7 +997,7 @@
         };
 
         // Login with email
-        window.loginWithEmail = function() {
+        window.loginWithEmail = async function() {
             const email = document.getElementById('loginEmail').value;
             const password = document.getElementById('loginPassword').value;
             
@@ -857,17 +1006,30 @@
                 return;
             }
             
-            signInWithEmailAndPassword(auth, email, password)
-                .then((userCredential) => {
-                    showMessage('Login successful! Welcome back!', 'success');
-                })
-                .catch((error) => {
-                    handleAuthError(error);
-                });
+            showLoading(true);
+            setButtonsDisabled(true);
+            
+            try {
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                
+                // Check if email is verified
+                if (!userCredential.user.emailVerified) {
+                    await signOut(auth);
+                    showMessage('Please verify your email before logging in. Check your inbox for the verification link.', 'warning');
+                    return;
+                }
+                
+                showMessage('Login successful! Welcome back!', 'success');
+            } catch (error) {
+                handleAuthError(error);
+            } finally {
+                showLoading(false);
+                setButtonsDisabled(false);
+            }
         };
 
         // Register with email
-        window.registerWithEmail = function() {
+        window.registerWithEmail = async function() {
             const name = document.getElementById('registerName').value;
             const email = document.getElementById('registerEmail').value;
             const password = document.getElementById('registerPassword').value;
@@ -882,32 +1044,122 @@
                 return;
             }
             
-            createUserWithEmailAndPassword(auth, email, password)
-                .then((userCredential) => {
-                    return updateProfile(userCredential.user, {
-                        displayName: name
-                    }).then(() => {
-                        showMessage('Registration successful! Welcome!', 'success');
-                    });
-                })
-                .catch((error) => {
-                    handleAuthError(error);
+            showLoading(true);
+            setButtonsDisabled(true);
+            
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                
+                // Update profile with name
+                await updateProfile(userCredential.user, {
+                    displayName: name
                 });
+                
+                // Send verification email
+                await sendEmailVerification(userCredential.user);
+                
+                // Sign out immediately
+                await signOut(auth);
+                
+                showMessage('Registration successful! Please check your email to verify your account before logging in.', 'success');
+                
+                // Clear form and switch to login
+                document.getElementById('registerName').value = '';
+                document.getElementById('registerEmail').value = '';
+                document.getElementById('registerPassword').value = '';
+                showLogin();
+                
+            } catch (error) {
+                handleAuthError(error);
+            } finally {
+                showLoading(false);
+                setButtonsDisabled(false);
+            }
         };
 
         // Login with Google
-        window.loginWithGoogle = function() {
-            signInWithPopup(auth, provider)
-                .then((result) => {
-                    showMessage('Google login successful! Welcome!', 'success');
-                })
-                .catch((error) => {
-                    handleAuthError(error);
-                });
+        window.loginWithGoogle = async function() {
+            showLoading(true);
+            setButtonsDisabled(true);
+            
+            try {
+                const result = await signInWithPopup(auth, provider);
+                
+                // Check if email is verified (Google accounts are automatically verified)
+                if (!result.user.emailVerified) {
+                    await signOut(auth);
+                    showMessage('Your Google email is not verified. Please verify your email with Google.', 'warning');
+                    return;
+                }
+                
+                showMessage('Google login successful! Welcome!', 'success');
+            } catch (error) {
+                handleAuthError(error);
+            } finally {
+                showLoading(false);
+                setButtonsDisabled(false);
+            }
         };
 
+        // Resend verification email
+        window.resendVerificationEmail = async function() {
+            if (!currentUser) return;
+            
+            showLoading(true);
+            document.getElementById('resendVerificationBtn').disabled = true;
+            
+            try {
+                await sendEmailVerification(currentUser);
+                showMessage('Verification email sent! Please check your inbox.', 'success');
+                isVerificationSent = true;
+            } catch (error) {
+                showMessage('Error sending verification email: ' + error.message, 'error');
+            } finally {
+                showLoading(false);
+                document.getElementById('resendVerificationBtn').disabled = false;
+            }
+        };
+
+        // Check email verification status
+        async function checkEmailVerification() {
+            if (!currentUser) return;
+            
+            try {
+                await reload(currentUser);
+                if (currentUser.emailVerified) {
+                    document.getElementById('verificationBanner').style.display = 'none';
+                    enableAppFeatures(true);
+                } else {
+                    document.getElementById('verificationBanner').style.display = 'flex';
+                    enableAppFeatures(false);
+                }
+            } catch (error) {
+                console.error('Error checking verification:', error);
+            }
+        }
+
+        // Enable/disable app features based on verification
+        function enableAppFeatures(enabled) {
+            const addTaskBtn = document.getElementById('addTaskBtn');
+            const refreshBtn = document.getElementById('refreshTasksBtn');
+            const chatInput = document.getElementById('chatMessageInput');
+            const sendChatBtn = document.getElementById('sendChatBtn');
+            
+            if (addTaskBtn) addTaskBtn.disabled = !enabled;
+            if (refreshBtn) refreshBtn.disabled = !enabled;
+            if (chatInput) chatInput.disabled = !enabled;
+            if (sendChatBtn) sendChatBtn.disabled = !enabled;
+            
+            if (!enabled) {
+                document.getElementById('tasksList').innerHTML = '<div class="empty-state">Please verify your email to access tasks and chat.</div>';
+                document.getElementById('taskStats').innerHTML = '<span>Verification required</span>';
+            }
+        }
+
         // Logout
-        window.logout = function() {
+        window.logout = async function() {
+            showLoading(true);
+            
             // Unsubscribe from listeners
             if (tasksUnsubscribe) {
                 tasksUnsubscribe();
@@ -918,7 +1170,8 @@
                 chatUnsubscribe = null;
             }
             
-            signOut(auth).then(() => {
+            try {
+                await signOut(auth);
                 showMessage('Logged out successfully', 'info');
                 document.getElementById('authContainer').style.display = 'block';
                 document.getElementById('appContainer').style.display = 'none';
@@ -933,9 +1186,11 @@
                 document.getElementById('taskDescription').value = '';
                 document.getElementById('taskReward').value = '';
                 document.getElementById('taskDeadline').value = '';
-            }).catch((error) => {
+            } catch (error) {
                 showMessage(error.message, 'error');
-            });
+            } finally {
+                showLoading(false);
+            }
         };
 
         // Handle authentication errors
@@ -952,6 +1207,8 @@
                 errorMessage = 'Invalid email address';
             } else if (error.code === 'auth/popup-closed-by-user') {
                 errorMessage = 'Sign-in popup was closed';
+            } else if (error.code === 'auth/unauthorized-domain') {
+                errorMessage = 'This domain is not authorized for Firebase authentication';
             }
             
             showMessage(errorMessage, 'error');
@@ -959,7 +1216,10 @@
 
         // Add task
         window.addTask = async function() {
-            if (!currentUser) return;
+            if (!currentUser || !currentUser.emailVerified) {
+                showMessage('Please verify your email before adding tasks', 'warning');
+                return;
+            }
             
             const title = document.getElementById('taskTitle').value.trim();
             const description = document.getElementById('taskDescription').value.trim();
@@ -971,6 +1231,9 @@
                 showMessage('Please enter a task title', 'error');
                 return;
             }
+            
+            showLoading(true);
+            document.getElementById('addTaskBtn').disabled = true;
             
             try {
                 await addDoc(collection(db, 'tasks'), {
@@ -996,11 +1259,19 @@
                 showMessage('Task added successfully!', 'success');
             } catch (error) {
                 showMessage('Error adding task: ' + error.message, 'error');
+            } finally {
+                showLoading(false);
+                document.getElementById('addTaskBtn').disabled = false;
             }
         };
 
         // Toggle task completion
         window.toggleTask = async function(taskId, currentStatus) {
+            if (!currentUser || !currentUser.emailVerified) {
+                showMessage('Please verify your email to update tasks', 'warning');
+                return;
+            }
+            
             try {
                 await updateDoc(doc(db, 'tasks', taskId), {
                     completed: !currentStatus,
@@ -1013,18 +1284,31 @@
 
         // Delete task
         window.deleteTask = async function(taskId) {
+            if (!currentUser || !currentUser.emailVerified) {
+                showMessage('Please verify your email to delete tasks', 'warning');
+                return;
+            }
+            
             if (confirm('Are you sure you want to delete this task?')) {
+                showLoading(true);
                 try {
                     await deleteDoc(doc(db, 'tasks', taskId));
                     showMessage('Task deleted successfully!', 'success');
                 } catch (error) {
                     showMessage('Error deleting task: ' + error.message, 'error');
+                } finally {
+                    showLoading(false);
                 }
             }
         };
 
         // Edit task
         window.editTask = async function(taskId) {
+            if (!currentUser || !currentUser.emailVerified) {
+                showMessage('Please verify your email to edit tasks', 'warning');
+                return;
+            }
+            
             const newTitle = prompt('Enter new title:');
             if (newTitle === null) return;
             
@@ -1033,6 +1317,7 @@
                 return;
             }
             
+            showLoading(true);
             try {
                 await updateDoc(doc(db, 'tasks', taskId), {
                     title: newTitle.trim(),
@@ -1041,13 +1326,9 @@
                 showMessage('Task updated successfully!', 'success');
             } catch (error) {
                 showMessage('Error updating task: ' + error.message, 'error');
+            } finally {
+                showLoading(false);
             }
-        };
-
-        // Open chat for task
-        window.openTaskChat = function(taskId, taskTitle) {
-            document.getElementById('chatHeaderTitle').textContent = `Chat about: ${taskTitle}`;
-            loadTaskMessages(taskId);
         };
 
         // Filter tasks
@@ -1073,6 +1354,9 @@
                 orderBy('createdAt', 'desc')
             );
             
+            // Show loading in tasks list
+            document.getElementById('tasksList').innerHTML = '<div class="empty-state">Loading tasks...</div>';
+            
             // Subscribe to real-time updates
             tasksUnsubscribe = onSnapshot(q, (snapshot) => {
                 let tasks = [];
@@ -1097,6 +1381,7 @@
                 displayTasks(tasks);
             }, (error) => {
                 console.error('Error loading tasks:', error);
+                document.getElementById('tasksList').innerHTML = '<div class="empty-state">Error loading tasks. Please refresh.</div>';
                 showMessage('Error loading tasks: ' + error.message, 'error');
             });
         }
@@ -1106,14 +1391,20 @@
             const tasksList = document.getElementById('tasksList');
             const taskStats = document.getElementById('taskStats');
             
+            if (!currentUser || !currentUser.emailVerified) {
+                tasksList.innerHTML = '<div class="empty-state">Please verify your email to view tasks.</div>';
+                taskStats.innerHTML = '<span>Verification required</span><button class="refresh-btn" onclick="loadTasks()" disabled>Refresh</button>';
+                return;
+            }
+            
             if (tasks.length === 0) {
                 tasksList.innerHTML = '<div class="empty-state">No tasks found. Create your first task above!</div>';
-                taskStats.textContent = '0 tasks';
+                taskStats.innerHTML = '<span>0 tasks</span><button class="refresh-btn" onclick="loadTasks()">Refresh</button>';
                 return;
             }
             
             const completedCount = tasks.filter(t => t.completed).length;
-            taskStats.textContent = `${tasks.length} total (${completedCount} completed)`;
+            taskStats.innerHTML = `<span>${tasks.length} total (${completedCount} completed)</span><button class="refresh-btn" onclick="loadTasks()">Refresh</button>`;
             
             tasksList.innerHTML = tasks.map(task => {
                 const deadline = task.deadline && task.deadline !== 'No deadline' 
@@ -1167,12 +1458,18 @@
 
         // Chat Functions
         window.sendChatMessage = async function() {
-            if (!currentUser) return;
+            if (!currentUser || !currentUser.emailVerified) {
+                showMessage('Please verify your email to send messages', 'warning');
+                return;
+            }
             
             const messageInput = document.getElementById('chatMessageInput');
             const messageText = messageInput.value.trim();
             
             if (!messageText) return;
+            
+            showLoading(true);
+            document.getElementById('sendChatBtn').disabled = true;
             
             try {
                 await addDoc(collection(db, 'chats'), {
@@ -1187,6 +1484,9 @@
                 messageInput.value = '';
             } catch (error) {
                 showMessage('Error sending message: ' + error.message, 'error');
+            } finally {
+                showLoading(false);
+                document.getElementById('sendChatBtn').disabled = false;
             }
         };
 
@@ -1231,6 +1531,13 @@
         // Display chat messages
         function displayChatMessages(messages) {
             const chatMessages = document.getElementById('chatMessages');
+            
+            if (!currentUser) return;
+            
+            if (!currentUser.emailVerified) {
+                chatMessages.innerHTML = '<div class="empty-state">Please verify your email to view and send messages.</div>';
+                return;
+            }
             
             if (messages.length === 0) {
                 chatMessages.innerHTML = '<div class="empty-state">No messages yet. Start the conversation!</div>';
@@ -1280,15 +1587,43 @@
             document.getElementById('userName').textContent = user.displayName || 'User';
             document.getElementById('userPhoto').src = user.photoURL || 'https://via.placeholder.com/40';
             
-            // Load tasks and chat for this user
-            loadTasks();
-            loadChatMessages();
+            // Check email verification
+            checkEmailVerification();
+            
+            // Load tasks and chat if verified
+            if (user.emailVerified) {
+                loadTasks();
+                loadChatMessages();
+            } else {
+                document.getElementById('tasksList').innerHTML = '<div class="empty-state">Please verify your email to view tasks.</div>';
+                document.getElementById('chatMessages').innerHTML = '<div class="empty-state">Please verify your email to view messages.</div>';
+                document.getElementById('taskStats').innerHTML = '<span>Verification required</span><button class="refresh-btn" onclick="loadTasks()" disabled>Refresh</button>';
+            }
         }
 
-        // Check auth state
-        onAuthStateChanged(auth, (user) => {
+        // Check auth state with periodic verification check
+        onAuthStateChanged(auth, async (user) => {
             if (user) {
                 updateUserInfo(user);
+                
+                // Periodically check verification status (every 5 seconds)
+                if (!user.emailVerified) {
+                    const checkInterval = setInterval(async () => {
+                        if (currentUser) {
+                            await reload(currentUser);
+                            if (currentUser.emailVerified) {
+                                clearInterval(checkInterval);
+                                document.getElementById('verificationBanner').style.display = 'none';
+                                enableAppFeatures(true);
+                                loadTasks();
+                                loadChatMessages();
+                                showMessage('Email verified successfully! You can now use all features.', 'success');
+                            }
+                        } else {
+                            clearInterval(checkInterval);
+                        }
+                    }, 5000);
+                }
             } else {
                 currentUser = null;
                 // Unsubscribe from listeners
