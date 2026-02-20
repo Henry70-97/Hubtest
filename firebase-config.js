@@ -1,4 +1,4 @@
-// Firebase configuration and initialization
+// js/firebase-config.js
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
 import { 
     getAuth, 
@@ -86,4 +86,3 @@ export {
     arrayUnion,
     arrayRemove
 };
-

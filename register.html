@@ -163,18 +163,28 @@
             background: #d4edda;
             color: #155724;
             border: 1px solid #c3e6cb;
+            display: block;
         }
 
         .message.error {
             background: #f8d7da;
             color: #721c24;
             border: 1px solid #f5c6cb;
+            display: block;
         }
 
         .message.info {
             background: #d1ecf1;
             color: #0c5460;
             border: 1px solid #bee5eb;
+            display: block;
+        }
+
+        .message.warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeeba;
+            display: block;
         }
 
         .verification-pending {
@@ -329,16 +339,39 @@
     </div>
 
     <script type="module">
+        // Import Firebase directly in the HTML file to avoid path issues
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
         import { 
-            auth,
+            getAuth, 
             createUserWithEmailAndPassword,
             signInWithPopup,
-            googleProvider,
+            GoogleAuthProvider,
             updateProfile,
             sendEmailVerification,
             fetchSignInMethodsForEmail,
-            signOut
-        } from './js/firebase-config.js';
+            signOut,
+            onAuthStateChanged
+        } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyChk2JA68-I5s1D0S10r9WK71LgTNi4hRQ",
+            authDomain: "nextgen-5fb6f.firebaseapp.com",
+            projectId: "nextgen-5fb6f",
+            storageBucket: "nextgen-5fb6f.firebasestorage.app",
+            messagingSenderId: "100132076455",
+            appId: "1:100132076455:web:c5aea1f6e1a5ebbea99482"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const googleProvider = new GoogleAuthProvider();
+
+        // Configure Google provider
+        googleProvider.setCustomParameters({
+            prompt: 'select_account'
+        });
 
         // Global variables
         let countdownInterval = null;
@@ -350,7 +383,7 @@
         }
 
         // Show message
-        function showMessage(text, type) {
+        window.showMessage = function(text, type) {
             const messageDiv = document.getElementById('message');
             messageDiv.textContent = text;
             messageDiv.className = `message ${type}`;
@@ -359,7 +392,7 @@
             setTimeout(() => {
                 messageDiv.style.display = 'none';
             }, 5000);
-        }
+        };
 
         // Start countdown for resend button
         function startCountdown(seconds = 60) {
@@ -415,6 +448,8 @@
                 const methods = await fetchSignInMethodsForEmail(auth, email);
                 if (methods.length > 0) {
                     showMessage('Email already registered. Please login instead.', 'error');
+                    showLoading(false);
+                    document.getElementById('registerBtn').disabled = false;
                     return;
                 }
 
@@ -453,6 +488,8 @@
                     errorMessage = 'Password is too weak';
                 } else if (error.code === 'auth/invalid-email') {
                     errorMessage = 'Invalid email address';
+                } else if (error.code === 'auth/network-request-failed') {
+                    errorMessage = 'Network error. Please check your internet connection.';
                 }
                 
                 showMessage(errorMessage, 'error');
@@ -470,19 +507,33 @@
             try {
                 const result = await signInWithPopup(auth, googleProvider);
                 
-                // Check if email is verified (Google accounts are automatically verified)
+                // Check if email is verified
                 if (!result.user.emailVerified) {
-                    showMessage('Your Google email is not verified.', 'error');
+                    showMessage('Your Google email is not verified with Google.', 'error');
                     await signOut(auth);
                     return;
                 }
 
+                showMessage('Google login successful! Redirecting...', 'success');
+                
                 // Redirect to dashboard
-                window.location.href = 'dashboard.html';
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                }, 1500);
 
             } catch (error) {
                 console.error('Google login error:', error);
-                showMessage(error.message, 'error');
+                let errorMessage = error.message;
+                
+                if (error.code === 'auth/popup-closed-by-user') {
+                    errorMessage = 'Sign-in popup was closed. Please try again.';
+                } else if (error.code === 'auth/popup-blocked') {
+                    errorMessage = 'Pop-up was blocked. Please allow pop-ups for this site.';
+                } else if (error.code === 'auth/unauthorized-domain') {
+                    errorMessage = 'This domain is not authorized for Firebase authentication.';
+                }
+                
+                showMessage(errorMessage, 'error');
             } finally {
                 showLoading(false);
                 document.getElementById('googleBtn').disabled = false;
@@ -495,7 +546,6 @@
             document.getElementById('resendBtn').disabled = true;
 
             try {
-                // Since user is signed out, we need to get the email from the input
                 const email = document.getElementById('email').value.trim();
                 
                 if (!email) {
@@ -503,13 +553,9 @@
                     return;
                 }
 
-                // Note: To resend verification, we would need the user to be signed in
-                // For security, we'll redirect to login with instructions
-                showMessage('Please check your email for the verification link. If you didn\'t receive it, try logging in to request a new one.', 'info');
+                showMessage('Please check your email for the verification link. If you didn\'t receive it, check your spam folder.', 'info');
                 
-                setTimeout(() => {
-                    window.location.href = 'login.html';
-                }, 3000);
+                startCountdown(60);
 
             } catch (error) {
                 console.error('Resend error:', error);
@@ -520,8 +566,6 @@
         };
 
         // Check if user is already logged in
-        import { onAuthStateChanged } from './js/firebase-config.js';
-        
         onAuthStateChanged(auth, (user) => {
             if (user && user.emailVerified) {
                 window.location.href = 'dashboard.html';

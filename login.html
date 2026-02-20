@@ -163,24 +163,28 @@
             background: #d4edda;
             color: #155724;
             border: 1px solid #c3e6cb;
+            display: block;
         }
 
         .message.error {
             background: #f8d7da;
             color: #721c24;
             border: 1px solid #f5c6cb;
+            display: block;
         }
 
         .message.info {
             background: #d1ecf1;
             color: #0c5460;
             border: 1px solid #bee5eb;
+            display: block;
         }
 
         .message.warning {
             background: #fff3cd;
             color: #856404;
             border: 1px solid #ffeeba;
+            display: block;
         }
 
         .loading-overlay {
@@ -212,7 +216,7 @@
 
         .forgot-password {
             text-align: right;
-            margin-top: 10px;
+            margin-bottom: 15px;
         }
 
         .forgot-password a {
@@ -247,7 +251,7 @@
         </div>
 
         <div class="forgot-password">
-            <a href="#">Forgot Password?</a>
+            <a href="#" onclick="forgotPassword()">Forgot Password?</a>
         </div>
 
         <button class="btn" onclick="loginWithEmail()" id="loginBtn">Login</button>
@@ -264,15 +268,37 @@
     </div>
 
     <script type="module">
+        // Import Firebase directly
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
         import { 
-            auth,
+            getAuth, 
             signInWithEmailAndPassword,
             signInWithPopup,
-            googleProvider,
+            GoogleAuthProvider,
             sendEmailVerification,
             signOut,
             onAuthStateChanged
-        } from './js/firebase-config.js';
+        } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyChk2JA68-I5s1D0S10r9WK71LgTNi4hRQ",
+            authDomain: "nextgen-5fb6f.firebaseapp.com",
+            projectId: "nextgen-5fb6f",
+            storageBucket: "nextgen-5fb6f.firebasestorage.app",
+            messagingSenderId: "100132076455",
+            appId: "1:100132076455:web:c5aea1f6e1a5ebbea99482"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const googleProvider = new GoogleAuthProvider();
+
+        // Configure Google provider
+        googleProvider.setCustomParameters({
+            prompt: 'select_account'
+        });
 
         // Show loading overlay
         function showLoading(show = true) {
@@ -280,7 +306,7 @@
         }
 
         // Show message
-        function showMessage(text, type) {
+        window.showMessage = function(text, type) {
             const messageDiv = document.getElementById('message');
             messageDiv.textContent = text;
             messageDiv.className = `message ${type}`;
@@ -289,6 +315,12 @@
             setTimeout(() => {
                 messageDiv.style.display = 'none';
             }, 5000);
+        };
+
+        // Check if user is admin
+        function checkIfAdmin(email) {
+            const adminEmails = ['admin@taskmaster.com']; // Add your admin emails here
+            return adminEmails.includes(email);
         }
 
         // Login with email
@@ -315,23 +347,24 @@
                     
                     showMessage('Please verify your email. A new verification link has been sent.', 'warning');
                     
-                    // Redirect to verification page after 3 seconds
-                    setTimeout(() => {
-                        window.location.href = 'register.html?verify=' + encodeURIComponent(email);
-                    }, 3000);
-                    
+                    showLoading(false);
+                    document.getElementById('loginBtn').disabled = false;
                     return;
                 }
 
+                showMessage('Login successful! Redirecting...', 'success');
+                
                 // Check if user is admin
                 const isAdmin = checkIfAdmin(email);
                 
                 // Redirect based on role
-                if (isAdmin) {
-                    window.location.href = 'admin.html';
-                } else {
-                    window.location.href = 'dashboard.html';
-                }
+                setTimeout(() => {
+                    if (isAdmin) {
+                        window.location.href = 'admin.html';
+                    } else {
+                        window.location.href = 'dashboard.html';
+                    }
+                }, 1500);
 
             } catch (error) {
                 console.error('Login error:', error);
@@ -345,10 +378,11 @@
                     errorMessage = 'Invalid email address';
                 } else if (error.code === 'auth/too-many-requests') {
                     errorMessage = 'Too many failed attempts. Please try again later.';
+                } else if (error.code === 'auth/network-request-failed') {
+                    errorMessage = 'Network error. Please check your internet connection.';
                 }
                 
                 showMessage(errorMessage, 'error');
-            } finally {
                 showLoading(false);
                 document.getElementById('loginBtn').disabled = false;
             }
@@ -368,30 +402,42 @@
                     return;
                 }
 
+                showMessage('Google login successful! Redirecting...', 'success');
+
                 // Check if user is admin
                 const isAdmin = checkIfAdmin(result.user.email);
                 
                 // Redirect based on role
-                if (isAdmin) {
-                    window.location.href = 'admin.html';
-                } else {
-                    window.location.href = 'dashboard.html';
-                }
+                setTimeout(() => {
+                    if (isAdmin) {
+                        window.location.href = 'admin.html';
+                    } else {
+                        window.location.href = 'dashboard.html';
+                    }
+                }, 1500);
 
             } catch (error) {
                 console.error('Google login error:', error);
-                showMessage(error.message, 'error');
-            } finally {
+                let errorMessage = error.message;
+                
+                if (error.code === 'auth/popup-closed-by-user') {
+                    errorMessage = 'Sign-in popup was closed. Please try again.';
+                } else if (error.code === 'auth/popup-blocked') {
+                    errorMessage = 'Pop-up was blocked. Please allow pop-ups for this site.';
+                } else if (error.code === 'auth/unauthorized-domain') {
+                    errorMessage = 'This domain is not authorized for Firebase authentication.';
+                }
+                
+                showMessage(errorMessage, 'error');
                 showLoading(false);
                 document.getElementById('googleBtn').disabled = false;
             }
         };
 
-        // Check if user is admin (you can modify this logic)
-        function checkIfAdmin(email) {
-            const adminEmails = ['admin@taskmaster.com', 'your-email@example.com']; // Add admin emails here
-            return adminEmails.includes(email);
-        }
+        // Forgot password
+        window.forgotPassword = function() {
+            showMessage('Please contact admin to reset your password.', 'info');
+        };
 
         // Check if user is already logged in
         onAuthStateChanged(auth, (user) => {
