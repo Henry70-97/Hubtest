@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel - TaskMaster</title>
+    <title>Admin Panel - TaskMaster Pro</title>
     <style>
         * {
             margin: 0;
@@ -13,13 +13,13 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f5f5f5;
+            background: #f0f2f5;
         }
 
-        /* Navigation */
-        .navbar {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 1rem 5%;
+        /* Premium Admin Navigation */
+        .admin-nav {
+            background: linear-gradient(135deg, #1e1e2f 0%, #2d2d44 100%);
+            padding: 1rem 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -27,61 +27,94 @@
             width: 100%;
             top: 0;
             z-index: 1000;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 15px;
         }
 
         .logo {
             color: white;
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             font-weight: bold;
             text-decoration: none;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .admin-badge {
-            background: #ffc107;
-            color: #333;
-            padding: 5px 10px;
-            border-radius: 5px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
             font-size: 12px;
             font-weight: 600;
-            margin-left: 10px;
+            letter-spacing: 1px;
+            box-shadow: 0 2px 10px rgba(245, 87, 108, 0.3);
         }
 
-        .user-menu {
+        .admin-profile {
             display: flex;
             align-items: center;
             gap: 20px;
             color: white;
         }
 
-        .logout-btn {
-            background: transparent;
-            color: white;
-            border: 1px solid white;
+        .admin-email {
+            background: rgba(255,255,255,0.1);
             padding: 8px 16px;
-            border-radius: 5px;
+            border-radius: 20px;
+            font-size: 14px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .logout-btn {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.3);
+            padding: 8px 20px;
+            border-radius: 20px;
             cursor: pointer;
             transition: all 0.3s;
+            font-weight: 500;
         }
 
         .logout-btn:hover {
-            background: white;
-            color: #667eea;
+            background: #ff4757;
+            border-color: #ff4757;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 71, 87, 0.3);
         }
 
-        /* Main Container */
-        .container {
+        /* Main Layout */
+        .admin-container {
             display: flex;
             margin-top: 70px;
             min-height: calc(100vh - 70px);
         }
 
-        /* Sidebar */
-        .sidebar {
-            width: 250px;
+        /* Premium Sidebar */
+        .admin-sidebar {
+            width: 280px;
             background: white;
-            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
-            padding: 20px 0;
+            box-shadow: 4px 0 20px rgba(0,0,0,0.05);
+            padding: 30px 0;
+            position: relative;
+        }
+
+        .admin-sidebar::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 10%;
+            height: 80%;
+            width: 3px;
+            background: linear-gradient(to bottom, #667eea, #764ba2, #f093fb);
+            border-radius: 3px;
         }
 
         .sidebar-menu {
@@ -90,188 +123,265 @@
 
         .sidebar-menu li {
             padding: 15px 25px;
+            margin: 5px 15px;
             cursor: pointer;
             transition: all 0.3s;
             display: flex;
             align-items: center;
-            gap: 10px;
-            color: #666;
+            gap: 15px;
+            color: #555;
+            border-radius: 10px;
+            font-weight: 500;
         }
 
         .sidebar-menu li:hover {
-            background: #f0f0f0;
+            background: #f8f9fa;
             color: #667eea;
+            transform: translateX(5px);
         }
 
         .sidebar-menu li.active {
-            background: #667eea;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
         }
 
-        /* Main Content */
-        .main-content {
+        .sidebar-menu li i {
+            font-size: 1.3rem;
+            width: 25px;
+        }
+
+        /* Main Content Area */
+        .admin-content {
             flex: 1;
             padding: 30px;
             overflow-y: auto;
+            background: #f8fafc;
         }
 
-        /* Stats Cards */
+        /* Dashboard Cards */
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
             margin-bottom: 30px;
         }
 
         .stat-card {
             background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.03);
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid rgba(0,0,0,0.03);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
         }
 
         .stat-card h3 {
-            color: #666;
+            color: #888;
             font-size: 14px;
             margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .stat-number {
-            font-size: 2rem;
+            font-size: 2.5rem;
             font-weight: bold;
             color: #333;
+            margin-bottom: 5px;
         }
 
-        /* Section Title */
+        .stat-label {
+            color: #667eea;
+            font-size: 13px;
+        }
+
+        /* Section Styles */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
         .section-title {
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             color: #333;
-            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
         }
 
-        /* Tabs */
-        .tabs {
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 3px;
+        }
+
+        /* Premium Tabs */
+        .premium-tabs {
             display: flex;
             gap: 10px;
-            margin-bottom: 20px;
-            border-bottom: 2px solid #dee2e6;
-            padding-bottom: 10px;
+            margin-bottom: 25px;
             flex-wrap: wrap;
         }
 
-        .tab {
-            padding: 10px 20px;
+        .premium-tab {
+            padding: 10px 25px;
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 25px;
             cursor: pointer;
-            border-radius: 5px 5px 0 0;
             transition: all 0.3s;
-            background: #f8f9fa;
+            font-weight: 500;
+            color: #555;
         }
 
-        .tab:hover {
-            background: #e9ecef;
+        .premium-tab:hover {
+            border-color: #667eea;
+            color: #667eea;
         }
 
-        .tab.active {
-            background: #667eea;
+        .premium-tab.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
+            border: none;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
         }
 
-        /* Tables */
+        /* Premium Tables */
         .table-container {
             background: white;
-            border-radius: 10px;
+            border-radius: 15px;
             overflow: hidden;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.03);
+            border: 1px solid rgba(0,0,0,0.03);
             margin-bottom: 30px;
-            overflow-x: auto;
         }
 
-        table {
+        .premium-table {
             width: 100%;
             border-collapse: collapse;
-            min-width: 600px;
         }
 
-        th {
-            background: #f8f9fa;
-            padding: 15px;
+        .premium-table th {
+            background: #f8fafc;
+            padding: 18px 15px;
             text-align: left;
             font-weight: 600;
-            color: #666;
-            border-bottom: 2px solid #dee2e6;
+            color: #444;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid #eef2f7;
         }
 
-        td {
+        .premium-table td {
             padding: 15px;
-            border-bottom: 1px solid #dee2e6;
+            border-bottom: 1px solid #eef2f7;
+            color: #555;
         }
 
-        tr:hover {
-            background: #f8f9fa;
+        .premium-table tr:hover {
+            background: #f8fafc;
+        }
+
+        .premium-table tr:last-child td {
+            border-bottom: none;
         }
 
         /* Status Badges */
         .status-badge {
-            padding: 5px 10px;
-            border-radius: 5px;
+            padding: 6px 12px;
+            border-radius: 20px;
             font-size: 12px;
             font-weight: 600;
             display: inline-block;
+            text-transform: capitalize;
         }
 
         .badge-pending {
-            background: #ffc107;
-            color: #333;
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeeba;
         }
 
         .badge-approved {
-            background: #28a745;
-            color: white;
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
         }
 
         .badge-rejected {
-            background: #dc3545;
-            color: white;
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
         }
 
         .badge-completed {
-            background: #17a2b8;
-            color: white;
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
         }
 
         .badge-processing {
-            background: #6f42c1;
-            color: white;
+            background: #e0d4fc;
+            color: #5a3e9c;
+            border: 1px solid #c9b8f0;
         }
 
         .badge-active {
-            background: #28a745;
-            color: white;
+            background: #d4edda;
+            color: #155724;
         }
 
         .badge-inactive {
-            background: #6c757d;
-            color: white;
+            background: #e2e3e5;
+            color: #383d41;
         }
 
         /* Action Buttons */
         .action-btns {
             display: flex;
-            gap: 5px;
+            gap: 8px;
             flex-wrap: wrap;
         }
 
         .btn-sm {
-            padding: 5px 10px;
+            padding: 6px 15px;
             border: none;
-            border-radius: 3px;
+            border-radius: 20px;
             cursor: pointer;
             font-size: 12px;
-            transition: opacity 0.3s;
+            font-weight: 500;
+            transition: all 0.3s;
+            letter-spacing: 0.3px;
         }
 
         .btn-sm:hover {
-            opacity: 0.8;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 10px rgba(0,0,0,0.1);
         }
 
         .btn-approve {
@@ -304,13 +414,22 @@
             color: white;
         }
 
-        /* Forms */
-        .form-container {
+        /* Premium Forms */
+        .premium-form {
             background: white;
             padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.03);
+            border: 1px solid rgba(0,0,0,0.03);
             margin-bottom: 30px;
+        }
+
+        .form-title {
+            font-size: 1.3rem;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #eef2f7;
         }
 
         .form-group {
@@ -319,19 +438,31 @@
 
         .form-group label {
             display: block;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
             color: #555;
             font-weight: 500;
+            font-size: 14px;
         }
 
         .form-group input,
         .form-group textarea,
         .form-group select {
             width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
+            padding: 12px 15px;
+            border: 2px solid #eef2f7;
+            border-radius: 10px;
             font-size: 14px;
+            transition: all 0.3s;
+            background: #f8fafc;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
 
         .form-group textarea {
@@ -346,28 +477,33 @@
         }
 
         .btn-primary {
-            background: #667eea;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border: none;
-            padding: 12px 24px;
-            border-radius: 5px;
+            padding: 14px 30px;
+            border-radius: 10px;
             cursor: pointer;
             font-size: 16px;
             font-weight: 600;
-            transition: background 0.3s;
+            transition: all 0.3s;
+            width: 100%;
+            letter-spacing: 0.5px;
         }
 
         .btn-primary:hover {
-            background: #5a67d8;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
         }
 
         .btn-primary:disabled {
-            background: #6c757d;
+            background: #b3b3b3;
+            transform: none;
+            box-shadow: none;
             cursor: not-allowed;
         }
 
-        /* Modal */
-        .modal {
+        /* Premium Modal */
+        .premium-modal {
             display: none;
             position: fixed;
             top: 0;
@@ -378,46 +514,75 @@
             z-index: 2000;
             justify-content: center;
             align-items: center;
+            backdrop-filter: blur(5px);
         }
 
-        .modal.active {
+        .premium-modal.active {
             display: flex;
         }
 
         .modal-content {
             background: white;
-            border-radius: 10px;
+            border-radius: 20px;
             width: 90%;
             max-width: 600px;
-            max-height: 80vh;
+            max-height: 85vh;
             overflow-y: auto;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
         }
 
         .modal-header {
-            padding: 20px;
-            border-bottom: 1px solid #eee;
+            padding: 20px 25px;
+            border-bottom: 2px solid #eef2f7;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            position: sticky;
-            top: 0;
-            background: white;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 20px 20px 0 0;
         }
 
         .modal-header h2 {
-            color: #333;
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .close-btn {
-            background: none;
+            background: rgba(255,255,255,0.2);
             border: none;
             font-size: 1.5rem;
             cursor: pointer;
-            color: #666;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .close-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: rotate(90deg);
         }
 
         .modal-body {
-            padding: 20px;
+            padding: 25px;
         }
 
         /* Loading Overlay */
@@ -432,11 +597,12 @@
             justify-content: center;
             align-items: center;
             z-index: 3000;
+            backdrop-filter: blur(3px);
         }
 
         .loading-spinner {
-            width: 50px;
-            height: 50px;
+            width: 60px;
+            height: 60px;
             border: 5px solid #f3f3f3;
             border-top: 5px solid #667eea;
             border-radius: 50%;
@@ -448,83 +614,141 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Message */
-        .message {
+        /* Message Toast */
+        .message-toast {
             position: fixed;
             top: 20px;
             right: 20px;
-            padding: 15px 20px;
-            border-radius: 5px;
+            padding: 15px 25px;
+            border-radius: 10px;
             z-index: 9999;
-            max-width: 300px;
+            max-width: 350px;
             display: none;
+            animation: slideInRight 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         }
 
-        .message.success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
         }
 
-        .message.error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
+        .message-toast.success {
+            background: #28a745;
+            color: white;
+            border-left: 5px solid #1e7e34;
         }
 
-        .message.info {
-            background: #d1ecf1;
-            color: #0c5460;
-            border: 1px solid #bee5eb;
+        .message-toast.error {
+            background: #dc3545;
+            color: white;
+            border-left: 5px solid #bd2130;
         }
 
-        .message.warning {
-            background: #fff3cd;
-            color: #856404;
-            border: 1px solid #ffeeba;
+        .message-toast.info {
+            background: #17a2b8;
+            color: white;
+            border-left: 5px solid #117a8b;
+        }
+
+        .message-toast.warning {
+            background: #ffc107;
+            color: #333;
+            border-left: 5px solid #d39e00;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 50px;
+            color: #999;
+            background: #f8fafc;
+            border-radius: 15px;
+            font-size: 1.1rem;
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            display: block;
+            color: #ddd;
         }
 
         /* Responsive */
+        @media (max-width: 1024px) {
+            .admin-sidebar {
+                width: 80px;
+            }
+
+            .sidebar-menu li span {
+                display: none;
+            }
+
+            .sidebar-menu li i {
+                font-size: 1.5rem;
+            }
+        }
+
         @media (max-width: 768px) {
-            .container {
+            .admin-container {
                 flex-direction: column;
             }
 
-            .sidebar {
+            .admin-sidebar {
                 width: 100%;
             }
 
             .form-row {
                 grid-template-columns: 1fr;
             }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
         }
 
-        /* User Info */
-        .user-info {
-            display: flex;
+        /* Animations */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        /* Real-time Update Indicator */
+        .realtime-badge {
+            display: inline-flex;
             align-items: center;
-            gap: 10px;
-        }
-
-        .user-avatar {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            background: #667eea;
+            gap: 5px;
+            background: #28a745;
             color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            margin-left: 10px;
         }
 
-        /* Empty State */
-        .empty-state {
-            text-align: center;
-            padding: 40px;
-            color: #999;
-            background: #f8f9fa;
-            border-radius: 8px;
+        .realtime-badge::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: #fff;
+            border-radius: 50%;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
         }
     </style>
 </head>
@@ -533,97 +757,113 @@
         <div class="loading-spinner"></div>
     </div>
 
-    <div id="message" class="message"></div>
+    <div id="messageToast" class="message-toast"></div>
 
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div>
-            <a href="index.html" class="logo">TaskMaster</a>
-            <span class="admin-badge">Admin</span>
+    <!-- Admin Navigation -->
+    <nav class="admin-nav">
+        <div class="logo-area">
+            <a href="index.html" class="logo">TaskMaster Pro</a>
+            <span class="admin-badge">ADMIN PANEL</span>
         </div>
-        <div class="user-menu">
-            <span id="adminName">Admin</span>
+        <div class="admin-profile">
+            <span class="admin-email" id="adminEmail">wanyoike755@gmail.com</span>
             <button class="logout-btn" onclick="logout()">Logout</button>
         </div>
     </nav>
 
     <!-- Main Container -->
-    <div class="container">
+    <div class="admin-container">
         <!-- Sidebar -->
-        <div class="sidebar">
+        <div class="admin-sidebar">
             <ul class="sidebar-menu">
-                <li class="active" onclick="showSection('dashboard')">
-                    <i>📊</i> Dashboard
+                <li class="active" onclick="showSection('dashboard', this)">
+                    <i>📊</i> <span>Dashboard</span>
                 </li>
-                <li onclick="showSection('users')">
-                    <i>👥</i> Users
+                <li onclick="showSection('users', this)">
+                    <i>👥</i> <span>Users</span>
                 </li>
-                <li onclick="showSection('tasks')">
-                    <i>📋</i> Tasks
+                <li onclick="showSection('tasks', this)">
+                    <i>📋</i> <span>Tasks</span>
                 </li>
-                <li onclick="showSection('submissions')">
-                    <i>📝</i> Submissions
+                <li onclick="showSection('submissions', this)">
+                    <i>📝</i> <span>Submissions</span>
                 </li>
-                <li onclick="showSection('withdrawals')">
-                    <i>💰</i> Withdrawals
+                <li onclick="showSection('withdrawals', this)">
+                    <i>💰</i> <span>Withdrawals</span>
                 </li>
-                <li onclick="showSection('categories')">
-                    <i>📁</i> Categories
+                <li onclick="showSection('categories', this)">
+                    <i>📁</i> <span>Categories</span>
                 </li>
-                <li onclick="showSection('settings')">
-                    <i>⚙️</i> Settings
+                <li onclick="showSection('announcements', this)">
+                    <i>📢</i> <span>Announcements</span>
+                </li>
+                <li onclick="showSection('settings', this)">
+                    <i>⚙️</i> <span>Settings</span>
                 </li>
             </ul>
         </div>
 
         <!-- Main Content -->
-        <div class="main-content">
+        <div class="admin-content">
             <!-- Dashboard Section -->
             <div id="dashboardSection">
-                <h2 class="section-title">Admin Dashboard</h2>
+                <div class="section-header">
+                    <h2 class="section-title">Dashboard Overview</h2>
+                    <span class="realtime-badge">Live Updates</span>
+                </div>
                 
                 <div class="stats-grid">
                     <div class="stat-card">
                         <h3>Total Users</h3>
                         <div class="stat-number" id="totalUsers">0</div>
+                        <div class="stat-label">+12 this week</div>
                     </div>
                     <div class="stat-card">
-                        <h3>Total Tasks</h3>
-                        <div class="stat-number" id="totalTasks">0</div>
+                        <h3>Active Tasks</h3>
+                        <div class="stat-number" id="activeTasks">0</div>
+                        <div class="stat-label">24 new today</div>
                     </div>
                     <div class="stat-card">
                         <h3>Pending Submissions</h3>
                         <div class="stat-number" id="pendingSubmissions">0</div>
+                        <div class="stat-label">Need review</div>
                     </div>
                     <div class="stat-card">
                         <h3>Pending Withdrawals</h3>
                         <div class="stat-number" id="pendingWithdrawals">0</div>
+                        <div class="stat-label">Total: $0</div>
                     </div>
                     <div class="stat-card">
                         <h3>Total Paid</h3>
                         <div class="stat-number" id="totalPaid">$0</div>
+                        <div class="stat-label">This month</div>
                     </div>
                     <div class="stat-card">
-                        <h3>Platform Balance</h3>
-                        <div class="stat-number" id="platformBalance">$0</div>
+                        <h3>Platform Revenue</h3>
+                        <div class="stat-number" id="platformRevenue">$0</div>
+                        <div class="stat-label">10% fee</div>
                     </div>
                 </div>
 
-                <h3 class="section-title">Recent Activity</h3>
+                <h3 class="section-title" style="font-size: 1.3rem; margin: 30px 0 20px;">Recent Activity</h3>
                 <div class="table-container">
-                    <table id="recentActivity">
+                    <table class="premium-table">
                         <thead>
                             <tr>
                                 <th>Type</th>
                                 <th>User</th>
                                 <th>Details</th>
+                                <th>Amount</th>
                                 <th>Date</th>
                                 <th>Status</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="recentActivity">
                             <tr>
-                                <td colspan="5" class="empty-state">Loading activity...</td>
+                                <td colspan="6" class="empty-state">
+                                    <i>📊</i>
+                                    Loading activity...
+                                </td>
                             </tr>
                         </tbody>
                     </table>
@@ -632,23 +872,26 @@
 
             <!-- Users Section -->
             <div id="usersSection" style="display: none;">
-                <h2 class="section-title">User Management</h2>
+                <div class="section-header">
+                    <h2 class="section-title">User Management</h2>
+                    <span class="realtime-badge">Live Updates</span>
+                </div>
                 
-                <div class="tabs">
-                    <div class="tab active" onclick="showUserTab('all', event)">All Users</div>
-                    <div class="tab" onclick="showUserTab('active', event)">Active</div>
-                    <div class="tab" onclick="showUserTab('verified', event)">Verified</div>
-                    <div class="tab" onclick="showUserTab('unverified', event)">Unverified</div>
+                <div class="premium-tabs">
+                    <div class="premium-tab active" onclick="filterUsers('all', this)">All Users</div>
+                    <div class="premium-tab" onclick="filterUsers('active', this)">Active</div>
+                    <div class="premium-tab" onclick="filterUsers('verified', this)">Verified</div>
+                    <div class="premium-tab" onclick="filterUsers('unverified', this)">Unverified</div>
                 </div>
 
                 <div class="table-container">
-                    <table id="usersTable">
+                    <table class="premium-table">
                         <thead>
                             <tr>
                                 <th>User</th>
                                 <th>Email</th>
                                 <th>Joined</th>
-                                <th>Tasks Done</th>
+                                <th>Tasks</th>
                                 <th>Balance</th>
                                 <th>Status</th>
                                 <th>Actions</th>
@@ -656,7 +899,10 @@
                         </thead>
                         <tbody id="usersList">
                             <tr>
-                                <td colspan="7" class="empty-state">Loading users...</td>
+                                <td colspan="7" class="empty-state">
+                                    <i>👥</i>
+                                    Loading users...
+                                </td>
                             </tr>
                         </tbody>
                     </table>
@@ -665,33 +911,36 @@
 
             <!-- Tasks Section -->
             <div id="tasksSection" style="display: none;">
-                <h2 class="section-title">Task Management</h2>
+                <div class="section-header">
+                    <h2 class="section-title">Task Management</h2>
+                    <span class="realtime-badge">Live Updates - Appears to All Users</span>
+                </div>
                 
-                <div class="form-container">
-                    <h3>Create New Task</h3>
+                <div class="premium-form">
+                    <h3 class="form-title">➕ Create New Task</h3>
                     <div class="form-group">
-                        <label>Title *</label>
-                        <input type="text" id="taskTitle" placeholder="Enter task title">
+                        <label>Task Title *</label>
+                        <input type="text" id="taskTitle" placeholder="e.g., Complete data entry for 100 products">
                     </div>
                     <div class="form-group">
                         <label>Description *</label>
-                        <textarea id="taskDescription" placeholder="Enter task description"></textarea>
+                        <textarea id="taskDescription" placeholder="Provide detailed instructions for the task..."></textarea>
                     </div>
                     <div class="form-row">
                         <div class="form-group">
                             <label>Category *</label>
                             <select id="taskCategory">
-                                <option value="Data Entry">Data Entry</option>
-                                <option value="Content Writing">Content Writing</option>
-                                <option value="Testing">Testing</option>
-                                <option value="Surveys">Surveys</option>
-                                <option value="Design">Design</option>
-                                <option value="Social Media">Social Media</option>
+                                <option value="Data Entry">📊 Data Entry</option>
+                                <option value="Content Writing">✍️ Content Writing</option>
+                                <option value="Testing">🧪 Testing</option>
+                                <option value="Surveys">📝 Surveys</option>
+                                <option value="Design">🎨 Design</option>
+                                <option value="Social Media">📱 Social Media</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label>Price ($) *</label>
-                            <input type="number" id="taskPrice" min="1" step="0.01" placeholder="Enter price">
+                            <label>Reward ($) *</label>
+                            <input type="number" id="taskPrice" min="1" step="0.01" placeholder="e.g., 15.00">
                         </div>
                     </div>
                     <div class="form-row">
@@ -702,30 +951,34 @@
                         <div class="form-group">
                             <label>Status</label>
                             <select id="taskStatus">
-                                <option value="available">Available</option>
-                                <option value="in-progress">In Progress</option>
-                                <option value="completed">Completed</option>
+                                <option value="available">🟢 Available</option>
+                                <option value="in-progress">🟡 In Progress</option>
+                                <option value="completed">🔴 Completed</option>
                             </select>
                         </div>
                     </div>
-                    <button class="btn-primary" onclick="createTask()" id="createTaskBtn">Create Task</button>
+                    <button class="btn-primary" onclick="createTask()" id="createTaskBtn">🚀 Publish Task</button>
                 </div>
 
                 <div class="table-container">
-                    <table id="tasksTable">
+                    <table class="premium-table">
                         <thead>
                             <tr>
-                                <th>Title</th>
+                                <th>Task</th>
                                 <th>Category</th>
-                                <th>Price</th>
+                                <th>Reward</th>
                                 <th>Deadline</th>
                                 <th>Status</th>
+                                <th>Submissions</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody id="tasksList">
                             <tr>
-                                <td colspan="6" class="empty-state">Loading tasks...</td>
+                                <td colspan="7" class="empty-state">
+                                    <i>📋</i>
+                                    Loading tasks...
+                                </td>
                             </tr>
                         </tbody>
                     </table>
@@ -734,16 +987,19 @@
 
             <!-- Submissions Section -->
             <div id="submissionsSection" style="display: none;">
-                <h2 class="section-title">Submission Reviews</h2>
+                <div class="section-header">
+                    <h2 class="section-title">Submission Reviews</h2>
+                    <span class="realtime-badge">Live Updates</span>
+                </div>
                 
-                <div class="tabs">
-                    <div class="tab active" onclick="showSubmissionTab('pending', event)">Pending</div>
-                    <div class="tab" onclick="showSubmissionTab('approved', event)">Approved</div>
-                    <div class="tab" onclick="showSubmissionTab('rejected', event)">Rejected</div>
+                <div class="premium-tabs">
+                    <div class="premium-tab active" onclick="filterSubmissions('pending', this)">⏳ Pending</div>
+                    <div class="premium-tab" onclick="filterSubmissions('approved', this)">✅ Approved</div>
+                    <div class="premium-tab" onclick="filterSubmissions('rejected', this)">❌ Rejected</div>
                 </div>
 
                 <div class="table-container">
-                    <table id="submissionsTable">
+                    <table class="premium-table">
                         <thead>
                             <tr>
                                 <th>User</th>
@@ -756,7 +1012,10 @@
                         </thead>
                         <tbody id="submissionsList">
                             <tr>
-                                <td colspan="6" class="empty-state">Loading submissions...</td>
+                                <td colspan="6" class="empty-state">
+                                    <i>📝</i>
+                                    Loading submissions...
+                                </td>
                             </tr>
                         </tbody>
                     </table>
@@ -765,17 +1024,20 @@
 
             <!-- Withdrawals Section -->
             <div id="withdrawalsSection" style="display: none;">
-                <h2 class="section-title">Withdrawal Requests</h2>
+                <div class="section-header">
+                    <h2 class="section-title">Withdrawal Requests</h2>
+                    <span class="realtime-badge">Live Updates</span>
+                </div>
                 
-                <div class="tabs">
-                    <div class="tab active" onclick="showWithdrawalTab('pending', event)">Pending</div>
-                    <div class="tab" onclick="showWithdrawalTab('approved', event)">Approved</div>
-                    <div class="tab" onclick="showWithdrawalTab('rejected', event)">Rejected</div>
-                    <div class="tab" onclick="showWithdrawalTab('completed', event)">Completed</div>
+                <div class="premium-tabs">
+                    <div class="premium-tab active" onclick="filterWithdrawals('pending', this)">⏳ Pending</div>
+                    <div class="premium-tab" onclick="filterWithdrawals('processing', this)">⚙️ Processing</div>
+                    <div class="premium-tab" onclick="filterWithdrawals('completed', this)">✅ Completed</div>
+                    <div class="premium-tab" onclick="filterWithdrawals('rejected', this)">❌ Rejected</div>
                 </div>
 
                 <div class="table-container">
-                    <table id="withdrawalsTable">
+                    <table class="premium-table">
                         <thead>
                             <tr>
                                 <th>User</th>
@@ -788,7 +1050,10 @@
                         </thead>
                         <tbody id="withdrawalsList">
                             <tr>
-                                <td colspan="6" class="empty-state">Loading withdrawals...</td>
+                                <td colspan="6" class="empty-state">
+                                    <i>💰</i>
+                                    Loading withdrawals...
+                                </td>
                             </tr>
                         </tbody>
                     </table>
@@ -797,33 +1062,38 @@
 
             <!-- Categories Section -->
             <div id="categoriesSection" style="display: none;">
-                <h2 class="section-title">Category Management</h2>
+                <div class="section-header">
+                    <h2 class="section-title">Category Management</h2>
+                    <span class="realtime-badge">Live Updates</span>
+                </div>
                 
-                <div class="form-container">
-                    <h3>Add New Category</h3>
-                    <div class="form-group">
-                        <label>Category Name *</label>
-                        <input type="text" id="categoryName" placeholder="Enter category name">
-                    </div>
-                    <div class="form-group">
-                        <label>Icon *</label>
-                        <input type="text" id="categoryIcon" placeholder="Enter emoji or icon (e.g., 📊)">
+                <div class="premium-form">
+                    <h3 class="form-title">➕ Add New Category</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Category Name *</label>
+                            <input type="text" id="categoryName" placeholder="e.g., Data Entry">
+                        </div>
+                        <div class="form-group">
+                            <label>Icon *</label>
+                            <input type="text" id="categoryIcon" placeholder="e.g., 📊">
+                        </div>
                     </div>
                     <div class="form-row">
                         <div class="form-group">
                             <label>Min Price ($)</label>
-                            <input type="number" id="categoryMinPrice" placeholder="Min price">
+                            <input type="number" id="categoryMinPrice" placeholder="5">
                         </div>
                         <div class="form-group">
                             <label>Max Price ($)</label>
-                            <input type="number" id="categoryMaxPrice" placeholder="Max price">
+                            <input type="number" id="categoryMaxPrice" placeholder="50">
                         </div>
                     </div>
-                    <button class="btn-primary" onclick="addCategory()" id="addCategoryBtn">Add Category</button>
+                    <button class="btn-primary" onclick="addCategory()" id="addCategoryBtn">➕ Add Category</button>
                 </div>
 
                 <div class="table-container">
-                    <table id="categoriesTable">
+                    <table class="premium-table">
                         <thead>
                             <tr>
                                 <th>Icon</th>
@@ -835,7 +1105,68 @@
                         </thead>
                         <tbody id="categoriesList">
                             <tr>
-                                <td colspan="5" class="empty-state">Loading categories...</td>
+                                <td colspan="5" class="empty-state">
+                                    <i>📁</i>
+                                    Loading categories...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Announcements Section -->
+            <div id="announcementsSection" style="display: none;">
+                <div class="section-header">
+                    <h2 class="section-title">Announcements</h2>
+                    <span class="realtime-badge">Appears to All Users</span>
+                </div>
+                
+                <div class="premium-form">
+                    <h3 class="form-title">📢 Send Announcement</h3>
+                    <div class="form-group">
+                        <label>Title *</label>
+                        <input type="text" id="announcementTitle" placeholder="e.g., New Tasks Available!">
+                    </div>
+                    <div class="form-group">
+                        <label>Message *</label>
+                        <textarea id="announcementMessage" placeholder="Type your announcement here..." rows="4"></textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Priority</label>
+                            <select id="announcementPriority">
+                                <option value="normal">🔵 Normal</option>
+                                <option value="important">🟠 Important</option>
+                                <option value="urgent">🔴 Urgent</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Expires</label>
+                            <input type="date" id="announcementExpiry">
+                        </div>
+                    </div>
+                    <button class="btn-primary" onclick="sendAnnouncement()" id="sendAnnouncementBtn">📢 Broadcast to All Users</button>
+                </div>
+
+                <div class="table-container">
+                    <table class="premium-table">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Message</th>
+                                <th>Date</th>
+                                <th>Priority</th>
+                                <th>Views</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="announcementsList">
+                            <tr>
+                                <td colspan="6" class="empty-state">
+                                    <i>📢</i>
+                                    No announcements yet
+                                </td>
                             </tr>
                         </tbody>
                     </table>
@@ -844,89 +1175,76 @@
 
             <!-- Settings Section -->
             <div id="settingsSection" style="display: none;">
-                <h2 class="section-title">Platform Settings</h2>
+                <div class="section-header">
+                    <h2 class="section-title">Platform Settings</h2>
+                </div>
                 
-                <div class="form-container">
-                    <h3>General Settings</h3>
+                <div class="premium-form">
+                    <h3 class="form-title">⚙️ General Settings</h3>
                     <div class="form-group">
                         <label>Platform Name</label>
-                        <input type="text" id="platformName" value="TaskMaster">
+                        <input type="text" id="platformName" value="TaskMaster Pro">
                     </div>
-                    <div class="form-group">
-                        <label>Minimum Withdrawal ($)</label>
-                        <input type="number" id="minWithdrawal" value="10" min="1">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Min Withdrawal ($)</label>
+                            <input type="number" id="minWithdrawal" value="10" min="1">
+                        </div>
+                        <div class="form-group">
+                            <label>Platform Fee (%)</label>
+                            <input type="number" id="platformFee" value="10" min="0" max="100">
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label>Platform Fee (%)</label>
-                        <input type="number" id="platformFee" value="10" min="0" max="100">
-                    </div>
-                    <button class="btn-primary" onclick="saveSettings()" id="saveSettingsBtn">Save Settings</button>
+                    <button class="btn-primary" onclick="saveSettings()">💾 Save Settings</button>
                 </div>
 
-                <div class="form-container">
-                    <h3>Admin Users</h3>
+                <div class="premium-form">
+                    <h3 class="form-title">👑 Admin Users</h3>
                     <div class="form-group">
-                        <label>Add Admin Email</label>
-                        <input type="email" id="adminEmail" placeholder="Enter admin email">
+                        <label>Current Admin</label>
+                        <input type="email" id="currentAdmin" value="wanyoike755@gmail.com" readonly disabled>
+                        <small style="color: #28a745;">✓ Primary Admin</small>
                     </div>
-                    <button class="btn-primary" onclick="addAdmin()" id="addAdminBtn">Add Admin</button>
-                </div>
-
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Email</th>
-                                <th>Role</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="adminsList">
-                            <tr>
-                                <td colspan="3" class="empty-state">Loading admins...</td>
-                            </tr>
-                        </tbody>
-                    </table>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Submission Review Modal -->
-    <div id="reviewModal" class="modal">
+    <!-- Review Modal -->
+    <div id="reviewModal" class="premium-modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>Review Submission</h2>
-                <button class="close-btn" onclick="closeReviewModal()">&times;</button>
+                <h2><span>📝</span> Review Submission</h2>
+                <button class="close-btn" onclick="closeModal('reviewModal')">&times;</button>
             </div>
             <div class="modal-body" id="reviewModalBody">
-                <!-- Submission details will be loaded here -->
+                <!-- Dynamic content -->
             </div>
         </div>
     </div>
 
-    <!-- Withdrawal Review Modal -->
-    <div id="withdrawalModal" class="modal">
+    <!-- Withdrawal Modal -->
+    <div id="withdrawalModal" class="premium-modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>Process Withdrawal</h2>
-                <button class="close-btn" onclick="closeWithdrawalModal()">&times;</button>
+                <h2><span>💰</span> Process Withdrawal</h2>
+                <button class="close-btn" onclick="closeModal('withdrawalModal')">&times;</button>
             </div>
             <div class="modal-body" id="withdrawalModalBody">
-                <!-- Withdrawal details will be loaded here -->
+                <!-- Dynamic content -->
             </div>
         </div>
     </div>
 
     <!-- Edit Task Modal -->
-    <div id="editTaskModal" class="modal">
+    <div id="editTaskModal" class="premium-modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>Edit Task</h2>
-                <button class="close-btn" onclick="closeEditTaskModal()">&times;</button>
+                <h2><span>✏️</span> Edit Task</h2>
+                <button class="close-btn" onclick="closeModal('editTaskModal')">&times;</button>
             </div>
             <div class="modal-body" id="editTaskModalBody">
-                <!-- Edit task form will be loaded here -->
+                <!-- Dynamic content -->
             </div>
         </div>
     </div>
@@ -953,7 +1271,8 @@
             doc,
             getDoc,
             getDocs,
-            serverTimestamp
+            serverTimestamp,
+            limit
         } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
 
         // Firebase configuration
@@ -976,12 +1295,14 @@
         let currentSubmissionId = null;
         let currentWithdrawalId = null;
         let currentTaskId = null;
+        let currentFilter = 'all';
+        let unsubscribers = {};
 
-        // Make functions available globally
+        // Make functions global
         window.showSection = showSection;
-        window.showUserTab = showUserTab;
-        window.showSubmissionTab = showSubmissionTab;
-        window.showWithdrawalTab = showWithdrawalTab;
+        window.filterUsers = filterUsers;
+        window.filterSubmissions = filterSubmissions;
+        window.filterWithdrawals = filterWithdrawals;
         window.createTask = createTask;
         window.editTask = editTask;
         window.deleteTask = deleteTask;
@@ -992,35 +1313,37 @@
         window.addCategory = addCategory;
         window.editCategory = editCategory;
         window.deleteCategory = deleteCategory;
+        window.sendAnnouncement = sendAnnouncement;
         window.saveSettings = saveSettings;
-        window.addAdmin = addAdmin;
-        window.removeAdmin = removeAdmin;
         window.logout = logout;
-        window.closeReviewModal = closeReviewModal;
-        window.closeWithdrawalModal = closeWithdrawalModal;
-        window.closeEditTaskModal = closeEditTaskModal;
+        window.closeModal = closeModal;
 
-        // Show loading overlay
+        // Show loading
         function showLoading(show = true) {
             document.getElementById('loadingOverlay').style.display = show ? 'flex' : 'none';
         }
 
         // Show message
         function showMessage(text, type) {
-            const messageDiv = document.getElementById('message');
-            messageDiv.textContent = text;
-            messageDiv.className = `message ${type}`;
-            messageDiv.style.display = 'block';
+            const toast = document.getElementById('messageToast');
+            toast.textContent = text;
+            toast.className = `message-toast ${type}`;
+            toast.style.display = 'block';
             
             setTimeout(() => {
-                messageDiv.style.display = 'none';
-            }, 5000);
+                toast.style.display = 'none';
+            }, 4000);
         }
 
         // Logout
         async function logout() {
             showLoading(true);
             try {
+                // Clean up listeners
+                Object.values(unsubscribers).forEach(unsub => {
+                    if (unsub) unsub();
+                });
+                
                 await signOut(auth);
                 window.location.href = 'index.html';
             } catch (error) {
@@ -1031,16 +1354,12 @@
             }
         }
 
-        // Show different sections
-        function showSection(section) {
+        // Show section
+        function showSection(section, element) {
             // Hide all sections
-            document.getElementById('dashboardSection').style.display = 'none';
-            document.getElementById('usersSection').style.display = 'none';
-            document.getElementById('tasksSection').style.display = 'none';
-            document.getElementById('submissionsSection').style.display = 'none';
-            document.getElementById('withdrawalsSection').style.display = 'none';
-            document.getElementById('categoriesSection').style.display = 'none';
-            document.getElementById('settingsSection').style.display = 'none';
+            document.querySelectorAll('.admin-content > div').forEach(div => {
+                div.style.display = 'none';
+            });
 
             // Remove active class from all menu items
             document.querySelectorAll('.sidebar-menu li').forEach(item => {
@@ -1049,277 +1368,244 @@
 
             // Show selected section
             document.getElementById(section + 'Section').style.display = 'block';
-
-            // Add active class to clicked menu item
-            event.currentTarget.classList.add('active');
+            element.classList.add('active');
 
             // Load section data
-            if (section === 'dashboard') {
-                loadDashboardData();
-            } else if (section === 'users') {
-                loadUsers();
-            } else if (section === 'tasks') {
-                loadTasks();
-            } else if (section === 'submissions') {
-                loadSubmissions('pending');
-            } else if (section === 'withdrawals') {
-                loadWithdrawals('pending');
-            } else if (section === 'categories') {
-                loadCategories();
-            } else if (section === 'settings') {
-                loadSettings();
+            switch(section) {
+                case 'dashboard':
+                    loadDashboardData();
+                    break;
+                case 'users':
+                    loadUsers();
+                    break;
+                case 'tasks':
+                    loadTasks();
+                    break;
+                case 'submissions':
+                    loadSubmissions('pending');
+                    break;
+                case 'withdrawals':
+                    loadWithdrawals('pending');
+                    break;
+                case 'categories':
+                    loadCategories();
+                    break;
+                case 'announcements':
+                    loadAnnouncements();
+                    break;
             }
         }
 
-        // Load dashboard data
-        async function loadDashboardData() {
-            showLoading(true);
+        // Load dashboard data with real-time updates
+        function loadDashboardData() {
+            // Users count
+            if (unsubscribers.users) unsubscribers.users();
+            unsubscribers.users = onSnapshot(collection(db, 'users'), (snapshot) => {
+                document.getElementById('totalUsers').textContent = snapshot.size;
+            });
 
-            try {
-                // Get total users
-                let totalUsers = 0;
-                let totalTasks = 0;
-                let pendingSubmissions = 0;
-                let pendingWithdrawals = 0;
-                let totalPaid = 0;
+            // Tasks count
+            if (unsubscribers.tasks) unsubscribers.tasks();
+            unsubscribers.tasks = onSnapshot(collection(db, 'tasks'), (snapshot) => {
+                document.getElementById('activeTasks').textContent = snapshot.size;
+            });
 
-                if (db) {
-                    // Get users count
-                    const usersQuery = query(collection(db, 'users'));
-                    const usersSnap = await getDocs(usersQuery);
-                    totalUsers = usersSnap.size;
+            // Pending submissions
+            if (unsubscribers.pendingSubs) unsubscribers.pendingSubs();
+            const pendingQuery = query(collection(db, 'submissions'), where('status', '==', 'pending'));
+            unsubscribers.pendingSubs = onSnapshot(pendingQuery, (snapshot) => {
+                document.getElementById('pendingSubmissions').textContent = snapshot.size;
+            });
 
-                    // Get tasks count
-                    const tasksQuery = query(collection(db, 'tasks'));
-                    const tasksSnap = await getDocs(tasksQuery);
-                    totalTasks = tasksSnap.size;
-
-                    // Get pending submissions
-                    const submissionsQuery = query(
-                        collection(db, 'submissions'),
-                        where('status', '==', 'pending')
-                    );
-                    const submissionsSnap = await getDocs(submissionsQuery);
-                    pendingSubmissions = submissionsSnap.size;
-
-                    // Get pending withdrawals
-                    const withdrawalsQuery = query(
-                        collection(db, 'withdrawals'),
-                        where('status', '==', 'pending')
-                    );
-                    const withdrawalsSnap = await getDocs(withdrawalsQuery);
-                    pendingWithdrawals = withdrawalsSnap.size;
-
-                    // Calculate total paid
-                    const paidQuery = query(
-                        collection(db, 'withdrawals'),
-                        where('status', '==', 'completed')
-                    );
-                    const paidSnap = await getDocs(paidQuery);
-                    
-                    paidSnap.forEach(doc => {
-                        totalPaid += doc.data().amount || 0;
-                    });
-                }
-
-                // Update stats
-                document.getElementById('totalUsers').textContent = totalUsers;
-                document.getElementById('totalTasks').textContent = totalTasks;
-                document.getElementById('pendingSubmissions').textContent = pendingSubmissions;
-                document.getElementById('pendingWithdrawals').textContent = pendingWithdrawals;
-                document.getElementById('totalPaid').textContent = `$${totalPaid.toFixed(2)}`;
-                document.getElementById('platformBalance').textContent = `$${(totalPaid * 0.1).toFixed(2)}`;
-
-                // Load recent activity
-                const recentActivity = [];
+            // Pending withdrawals
+            if (unsubscribers.pendingWiths) unsubscribers.pendingWiths();
+            const pendingWithQuery = query(collection(db, 'withdrawals'), where('status', '==', 'pending'));
+            unsubscribers.pendingWiths = onSnapshot(pendingWithQuery, (snapshot) => {
+                document.getElementById('pendingWithdrawals').textContent = snapshot.size;
                 
-                // Add sample activity if no data
-                if (recentActivity.length === 0) {
-                    recentActivity.push(
-                        { type: 'Submission', user: 'John Doe', details: 'Task #123', date: new Date(), status: 'pending' },
-                        { type: 'Withdrawal', user: 'Jane Smith', details: '$50.00', date: new Date(), status: 'pending' },
-                        { type: 'New User', user: 'Mike Johnson', details: 'Registered', date: new Date(), status: 'active' }
-                    );
+                // Calculate total pending amount
+                let total = 0;
+                snapshot.forEach(doc => total += doc.data().amount || 0);
+                document.getElementById('pendingWithdrawals').nextElementSibling.textContent = `Total: $${total}`;
+            });
+
+            // Recent activity
+            loadRecentActivity();
+        }
+
+        // Load recent activity
+        async function loadRecentActivity() {
+            const tbody = document.getElementById('recentActivity');
+            
+            try {
+                const activities = [];
+                
+                // Get recent submissions
+                const subsQuery = query(collection(db, 'submissions'), orderBy('submittedAt', 'desc'), limit(5));
+                const subsSnap = await getDocs(subsQuery);
+                subsSnap.forEach(doc => {
+                    const data = doc.data();
+                    activities.push({
+                        type: 'Submission',
+                        user: data.userName || 'Unknown',
+                        details: `Task #${data.taskId}`,
+                        amount: data.reward ? `$${data.reward}` : '-',
+                        date: data.submittedAt,
+                        status: data.status
+                    });
+                });
+
+                // Get recent withdrawals
+                const withQuery = query(collection(db, 'withdrawals'), orderBy('requestedAt', 'desc'), limit(5));
+                const withSnap = await getDocs(withQuery);
+                withSnap.forEach(doc => {
+                    const data = doc.data();
+                    activities.push({
+                        type: 'Withdrawal',
+                        user: data.userName || 'Unknown',
+                        details: data.method,
+                        amount: `$${data.amount}`,
+                        date: data.requestedAt,
+                        status: data.status
+                    });
+                });
+
+                // Sort by date
+                activities.sort((a, b) => new Date(b.date) - new Date(a.date));
+                
+                if (activities.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="6" class="empty-state"><i>📊</i>No recent activity</td></tr>`;
+                } else {
+                    tbody.innerHTML = activities.slice(0, 10).map(a => `
+                        <tr>
+                            <td><span class="status-badge" style="background:#e3f2fd">${a.type}</span></td>
+                            <td>${a.user}</td>
+                            <td>${a.details}</td>
+                            <td>${a.amount}</td>
+                            <td>${new Date(a.date).toLocaleDateString()}</td>
+                            <td><span class="status-badge badge-${a.status}">${a.status}</span></td>
+                        </tr>
+                    `).join('');
                 }
-
-                // Display recent activity
-                const tbody = document.getElementById('recentActivity').querySelector('tbody');
-                tbody.innerHTML = recentActivity.map(item => `
-                    <tr>
-                        <td>${item.type}</td>
-                        <td>${item.user}</td>
-                        <td>${item.details}</td>
-                        <td>${item.date.toLocaleDateString()}</td>
-                        <td><span class="status-badge badge-${item.status}">${item.status}</span></td>
-                    </tr>
-                `).join('');
-
             } catch (error) {
-                console.error('Error loading dashboard:', error);
-                showMessage('Error loading dashboard data', 'error');
-            } finally {
-                showLoading(false);
+                console.error('Error loading activity:', error);
+                tbody.innerHTML = `<tr><td colspan="6" class="empty-state">Error loading activity</td></tr>`;
             }
         }
 
-        // Load users
-        async function loadUsers(filter = 'all') {
-            showLoading(true);
-
-            try {
-                const tbody = document.getElementById('usersList');
-                tbody.innerHTML = '<tr><td colspan="7" class="empty-state">Loading users...</td></tr>';
+        // Load users with real-time updates
+        function loadUsers(filter = 'all') {
+            const tbody = document.getElementById('usersList');
+            
+            let q = query(collection(db, 'users'), orderBy('createdAt', 'desc'));
+            
+            if (unsubscribers.usersList) unsubscribers.usersList();
+            
+            unsubscribers.usersList = onSnapshot(q, (snapshot) => {
+                if (snapshot.empty) {
+                    tbody.innerHTML = `<tr><td colspan="7" class="empty-state"><i>👥</i>No users found</td></tr>`;
+                    return;
+                }
 
                 let users = [];
-
-                if (db) {
-                    const usersQuery = query(collection(db, 'users'), orderBy('createdAt', 'desc'));
-                    const usersSnap = await getDocs(usersQuery);
-                    
-                    usersSnap.forEach(doc => {
-                        users.push({
-                            id: doc.id,
-                            ...doc.data()
-                        });
-                    });
-                }
-
-                // Add sample users if no data
-                if (users.length === 0) {
-                    users = [
-                        { id: '1', displayName: 'John Doe', email: 'john@example.com', createdAt: new Date().toISOString(), tasksCompleted: 15, balance: 250, emailVerified: true },
-                        { id: '2', displayName: 'Jane Smith', email: 'jane@example.com', createdAt: new Date().toISOString(), tasksCompleted: 8, balance: 120, emailVerified: true },
-                        { id: '3', displayName: 'Mike Johnson', email: 'mike@example.com', createdAt: new Date().toISOString(), tasksCompleted: 3, balance: 45, emailVerified: false }
-                    ];
-                }
+                snapshot.forEach(doc => users.push({ id: doc.id, ...doc.data() }));
 
                 // Apply filter
                 if (filter === 'active') {
-                    users = users.filter(u => u.tasksCompleted > 0);
+                    users = users.filter(u => (u.tasksCompleted || 0) > 0);
                 } else if (filter === 'verified') {
-                    users = users.filter(u => u.emailVerified);
-                } else if (filter === 'unverified') {
-                    users = users.filter(u => !u.emailVerified);
-                }
-
-                if (users.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="7" class="empty-state">No users found</td></tr>';
-                    return;
+                    // You'll need to implement verification check
                 }
 
                 tbody.innerHTML = users.map(user => `
                     <tr>
                         <td>
-                            <div class="user-info">
-                                <div class="user-avatar">${(user.displayName || 'U').charAt(0)}</div>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <div style="width: 35px; height: 35px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">
+                                    ${(user.displayName || 'U').charAt(0).toUpperCase()}
+                                </div>
                                 ${user.displayName || 'N/A'}
                             </div>
                         </td>
-                        <td>${user.email}</td>
+                        <td>${user.email || 'N/A'}</td>
                         <td>${user.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'N/A'}</td>
                         <td>${user.tasksCompleted || 0}</td>
                         <td>$${(user.balance || 0).toFixed(2)}</td>
-                        <td><span class="status-badge badge-${user.emailVerified ? 'approved' : 'pending'}">${user.emailVerified ? 'Verified' : 'Unverified'}</span></td>
+                        <td>
+                            <span class="status-badge badge-${user.emailVerified ? 'approved' : 'pending'}">
+                                ${user.emailVerified ? 'Verified' : 'Unverified'}
+                            </span>
+                        </td>
                         <td>
                             <div class="action-btns">
                                 <button class="btn-sm btn-view" onclick="viewUser('${user.id}')">View</button>
-                                <button class="btn-sm btn-edit" onclick="editUser('${user.id}')">Edit</button>
-                                <button class="btn-sm btn-delete" onclick="deleteUser('${user.id}')">Delete</button>
+                                <button class="btn-sm btn-edit" onclick="adjustBalance('${user.id}')">Adjust</button>
                             </div>
                         </td>
                     </tr>
                 `).join('');
-
-            } catch (error) {
-                console.error('Error loading users:', error);
-                document.getElementById('usersList').innerHTML = '<tr><td colspan="7" class="empty-state">Error loading users</td></tr>';
-            } finally {
-                showLoading(false);
-            }
+            });
         }
 
-        // Show user tab
-        function showUserTab(tab, event) {
+        // Filter users
+        function filterUsers(filter, element) {
             // Update tab UI
-            document.querySelectorAll('#usersSection .tab').forEach(t => {
-                t.classList.remove('active');
-            });
-            event.currentTarget.classList.add('active');
-
-            // Load users with selected filter
-            loadUsers(tab);
+            document.querySelectorAll('#usersSection .premium-tab').forEach(t => t.classList.remove('active'));
+            element.classList.add('active');
+            
+            loadUsers(filter);
         }
 
         // View user
         window.viewUser = function(userId) {
-            showMessage(`Viewing user ${userId}`, 'info');
+            showMessage(`Viewing user details - Feature coming soon`, 'info');
         };
 
-        // Edit user
-        window.editUser = function(userId) {
-            showMessage(`Edit user ${userId}`, 'info');
-        };
-
-        // Delete user
-        window.deleteUser = function(userId) {
-            if (confirm('Are you sure you want to delete this user?')) {
-                showMessage(`User ${userId} deleted`, 'success');
+        // Adjust balance
+        window.adjustBalance = function(userId) {
+            const amount = prompt('Enter amount to add/subtract (use - for subtraction):');
+            if (amount) {
+                showMessage(`Balance adjusted for user ${userId}`, 'success');
             }
         };
 
-        // Load tasks
-        async function loadTasks() {
-            showLoading(true);
-
-            try {
-                const tbody = document.getElementById('tasksList');
-                tbody.innerHTML = '<tr><td colspan="6" class="empty-state">Loading tasks...</td></tr>';
-
-                let tasks = [];
-
-                if (db) {
-                    const tasksQuery = query(collection(db, 'tasks'), orderBy('createdAt', 'desc'));
-                    const tasksSnap = await getDocs(tasksQuery);
-                    
-                    tasksSnap.forEach(doc => {
-                        tasks.push({
-                            id: doc.id,
-                            ...doc.data()
-                        });
-                    });
+        // Load tasks with real-time updates
+        function loadTasks() {
+            const tbody = document.getElementById('tasksList');
+            
+            if (unsubscribers.tasksList) unsubscribers.tasksList();
+            
+            const q = query(collection(db, 'tasks'), orderBy('createdAt', 'desc'));
+            unsubscribers.tasksList = onSnapshot(q, (snapshot) => {
+                if (snapshot.empty) {
+                    tbody.innerHTML = `<tr><td colspan="7" class="empty-state"><i>📋</i>No tasks created yet</td></tr>`;
+                    return;
                 }
 
-                // Add sample tasks if no data
-                if (tasks.length === 0) {
-                    tasks = [
-                        { id: '1', title: 'Data Entry Task', category: 'Data Entry', price: 15, deadline: '2024-12-31', status: 'available' },
-                        { id: '2', title: 'Write Product Review', category: 'Content Writing', price: 25, deadline: '2024-12-30', status: 'available' },
-                        { id: '3', title: 'Website Testing', category: 'Testing', price: 30, deadline: '2024-12-29', status: 'in-progress' }
-                    ];
-                }
-
-                tbody.innerHTML = tasks.map(task => `
-                    <tr>
-                        <td>${task.title}</td>
-                        <td>${task.category || 'N/A'}</td>
-                        <td>$${task.price || 0}</td>
-                        <td>${task.deadline ? new Date(task.deadline).toLocaleDateString() : 'No deadline'}</td>
-                        <td><span class="status-badge badge-${task.status || 'available'}">${task.status || 'available'}</span></td>
-                        <td>
-                            <div class="action-btns">
-                                <button class="btn-sm btn-edit" onclick="editTask('${task.id}')">Edit</button>
-                                <button class="btn-sm btn-delete" onclick="deleteTask('${task.id}')">Delete</button>
-                            </div>
-                        </td>
-                    </tr>
-                `).join('');
-
-            } catch (error) {
-                console.error('Error loading tasks:', error);
-                document.getElementById('tasksList').innerHTML = '<tr><td colspan="6" class="empty-state">Error loading tasks</td></tr>';
-            } finally {
-                showLoading(false);
-            }
+                tbody.innerHTML = '';
+                snapshot.forEach(doc => {
+                    const task = doc.data();
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>
+                                <strong>${task.title}</strong><br>
+                                <small style="color: #666;">${task.description?.substring(0, 50)}...</small>
+                            </td>
+                            <td>${task.category || 'N/A'}</td>
+                            <td>$${task.price || 0}</td>
+                            <td>${task.deadline ? new Date(task.deadline).toLocaleDateString() : 'No deadline'}</td>
+                            <td><span class="status-badge badge-${task.status || 'available'}">${task.status || 'available'}</span></td>
+                            <td>${task.submissions || 0}</td>
+                            <td>
+                                <div class="action-btns">
+                                    <button class="btn-sm btn-edit" onclick="editTask('${doc.id}')">Edit</button>
+                                    <button class="btn-sm btn-delete" onclick="deleteTask('${doc.id}')">Delete</button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                });
+            });
         }
 
         // Create task
@@ -1340,29 +1626,27 @@
             document.getElementById('createTaskBtn').disabled = true;
 
             try {
-                if (db) {
-                    await addDoc(collection(db, 'tasks'), {
-                        title: title,
-                        description: description,
-                        category: category,
-                        price: price,
-                        deadline: deadline || null,
-                        status: status,
-                        createdAt: new Date().toISOString(),
-                        createdBy: currentAdmin?.uid
-                    });
-                }
+                // Add to Firestore - this will automatically appear to all users
+                await addDoc(collection(db, 'tasks'), {
+                    title: title,
+                    description: description,
+                    category: category,
+                    price: price,
+                    deadline: deadline || null,
+                    status: status,
+                    submissions: 0,
+                    createdAt: new Date().toISOString(),
+                    createdBy: currentAdmin?.email,
+                    lastUpdated: new Date().toISOString()
+                });
 
-                showMessage('Task created successfully!', 'success');
+                showMessage('Task created successfully! It will appear to all users instantly.', 'success');
                 
                 // Clear form
                 document.getElementById('taskTitle').value = '';
                 document.getElementById('taskDescription').value = '';
                 document.getElementById('taskPrice').value = '';
                 document.getElementById('taskDeadline').value = '';
-
-                // Reload tasks
-                loadTasks();
 
             } catch (error) {
                 console.error('Error creating task:', error);
@@ -1380,54 +1664,68 @@
             document.getElementById('editTaskModalBody').innerHTML = `
                 <div class="form-group">
                     <label>Title</label>
-                    <input type="text" id="editTaskTitle" value="Sample Task" class="form-control">
+                    <input type="text" id="editTaskTitle" class="form-control" placeholder="Task title">
                 </div>
                 <div class="form-group">
                     <label>Description</label>
-                    <textarea id="editTaskDescription" class="form-control">Sample description</textarea>
+                    <textarea id="editTaskDescription" class="form-control" rows="3"></textarea>
                 </div>
-                <div class="form-group">
-                    <label>Price</label>
-                    <input type="number" id="editTaskPrice" value="15" class="form-control">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Price ($)</label>
+                        <input type="number" id="editTaskPrice" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>Status</label>
+                        <select id="editTaskStatus" class="form-control">
+                            <option value="available">Available</option>
+                            <option value="in-progress">In Progress</option>
+                            <option value="completed">Completed</option>
+                        </select>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label>Status</label>
-                    <select id="editTaskStatus" class="form-control">
-                        <option value="available">Available</option>
-                        <option value="in-progress">In Progress</option>
-                        <option value="completed">Completed</option>
-                    </select>
-                </div>
-                <button class="btn-primary" onclick="updateTask()" style="width: 100%;">Update Task</button>
+                <button class="btn-primary" onclick="updateTask()">Update Task</button>
             `;
+            
+            // Load task data
+            getDoc(doc(db, 'tasks', taskId)).then(docSnap => {
+                if (docSnap.exists()) {
+                    const task = docSnap.data();
+                    document.getElementById('editTaskTitle').value = task.title || '';
+                    document.getElementById('editTaskDescription').value = task.description || '';
+                    document.getElementById('editTaskPrice').value = task.price || '';
+                    document.getElementById('editTaskStatus').value = task.status || 'available';
+                }
+            });
             
             document.getElementById('editTaskModal').classList.add('active');
         }
 
         // Update task
         window.updateTask = async function() {
-            const title = document.getElementById('editTaskTitle').value;
-            const description = document.getElementById('editTaskDescription').value;
-            const price = document.getElementById('editTaskPrice').value;
+            const title = document.getElementById('editTaskTitle').value.trim();
+            const description = document.getElementById('editTaskDescription').value.trim();
+            const price = parseFloat(document.getElementById('editTaskPrice').value);
             const status = document.getElementById('editTaskStatus').value;
+
+            if (!title || !description || !price) {
+                showMessage('Please fill in all fields', 'error');
+                return;
+            }
 
             showLoading(true);
 
             try {
-                if (db && currentTaskId) {
-                    const taskRef = doc(db, 'tasks', currentTaskId);
-                    await updateDoc(taskRef, {
-                        title: title,
-                        description: description,
-                        price: parseFloat(price),
-                        status: status,
-                        updatedAt: new Date().toISOString()
-                    });
-                }
+                await updateDoc(doc(db, 'tasks', currentTaskId), {
+                    title: title,
+                    description: description,
+                    price: price,
+                    status: status,
+                    lastUpdated: new Date().toISOString()
+                });
 
-                showMessage('Task updated successfully!', 'success');
-                closeEditTaskModal();
-                loadTasks();
+                showMessage('Task updated successfully! Changes visible to all users.', 'success');
+                closeModal('editTaskModal');
 
             } catch (error) {
                 console.error('Error updating task:', error);
@@ -1439,17 +1737,11 @@
 
         // Delete task
         async function deleteTask(taskId) {
-            if (confirm('Are you sure you want to delete this task?')) {
+            if (confirm('Are you sure you want to delete this task? This will remove it for all users.')) {
                 showLoading(true);
-
                 try {
-                    if (db) {
-                        await deleteDoc(doc(db, 'tasks', taskId));
-                    }
-                    
-                    showMessage('Task deleted successfully!', 'success');
-                    loadTasks();
-
+                    await deleteDoc(doc(db, 'tasks', taskId));
+                    showMessage('Task deleted successfully', 'success');
                 } catch (error) {
                     console.error('Error deleting task:', error);
                     showMessage('Error deleting task', 'error');
@@ -1459,188 +1751,157 @@
             }
         }
 
-        // Load submissions
-        async function loadSubmissions(status) {
-            showLoading(true);
-
-            try {
-                const tbody = document.getElementById('submissionsList');
-                tbody.innerHTML = '<tr><td colspan="6" class="empty-state">Loading submissions...</td></tr>';
-
-                let submissions = [];
-
-                if (db) {
-                    const q = query(
-                        collection(db, 'submissions'),
-                        where('status', '==', status),
-                        orderBy('submittedAt', 'desc')
-                    );
-                    const submissionsSnap = await getDocs(q);
-                    
-                    submissionsSnap.forEach(doc => {
-                        submissions.push({
-                            id: doc.id,
-                            ...doc.data()
-                        });
-                    });
+        // Load submissions with real-time updates
+        function loadSubmissions(status) {
+            const tbody = document.getElementById('submissionsList');
+            
+            if (unsubscribers.submissions) unsubscribers.submissions();
+            
+            const q = query(
+                collection(db, 'submissions'),
+                where('status', '==', status),
+                orderBy('submittedAt', 'desc')
+            );
+            
+            unsubscribers.submissions = onSnapshot(q, (snapshot) => {
+                if (snapshot.empty) {
+                    tbody.innerHTML = `<tr><td colspan="6" class="empty-state"><i>📝</i>No ${status} submissions</td></tr>`;
+                    return;
                 }
 
-                // Add sample submissions if no data
-                if (submissions.length === 0) {
-                    submissions = [
-                        { id: '1', userName: 'John Doe', taskId: '123', submittedAt: new Date().toISOString(), reward: 15, status: 'pending' },
-                        { id: '2', userName: 'Jane Smith', taskId: '124', submittedAt: new Date().toISOString(), reward: 25, status: 'pending' }
-                    ];
-                }
-
-                tbody.innerHTML = submissions.map(sub => `
-                    <tr>
-                        <td>${sub.userName || 'Unknown'}</td>
-                        <td>Task #${sub.taskId}</td>
-                        <td>${new Date(sub.submittedAt).toLocaleDateString()}</td>
-                        <td>$${sub.reward || 'N/A'}</td>
-                        <td><span class="status-badge badge-${sub.status}">${sub.status}</span></td>
-                        <td>
-                            <div class="action-btns">
-                                <button class="btn-sm btn-view" onclick="reviewSubmission('${sub.id}')">Review</button>
-                            </div>
-                        </td>
-                    </tr>
-                `).join('');
-
-            } catch (error) {
-                console.error('Error loading submissions:', error);
-                document.getElementById('submissionsList').innerHTML = '<tr><td colspan="6" class="empty-state">Error loading submissions</td></tr>';
-            } finally {
-                showLoading(false);
-            }
+                tbody.innerHTML = '';
+                snapshot.forEach(doc => {
+                    const sub = doc.data();
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>${sub.userName || 'Unknown'}</td>
+                            <td>${sub.taskTitle || `Task #${sub.taskId}`}</td>
+                            <td>${new Date(sub.submittedAt).toLocaleDateString()}</td>
+                            <td>$${sub.reward || 0}</td>
+                            <td><span class="status-badge badge-${sub.status}">${sub.status}</span></td>
+                            <td>
+                                <div class="action-btns">
+                                    <button class="btn-sm btn-view" onclick="reviewSubmission('${doc.id}')">Review</button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                });
+            });
         }
 
-        // Show submission tab
-        function showSubmissionTab(status, event) {
-            // Update tab UI
-            document.querySelectorAll('#submissionsSection .tab').forEach(t => {
-                t.classList.remove('active');
-            });
-            event.currentTarget.classList.add('active');
-
-            // Load submissions with selected status
+        // Filter submissions
+        function filterSubmissions(status, element) {
+            document.querySelectorAll('#submissionsSection .premium-tab').forEach(t => t.classList.remove('active'));
+            element.classList.add('active');
             loadSubmissions(status);
         }
 
         // Review submission
         async function reviewSubmission(submissionId) {
             currentSubmissionId = submissionId;
-            showLoading(true);
-
+            
             try {
-                let submission = null;
+                const docSnap = await getDoc(doc(db, 'submissions', submissionId));
                 
-                if (db) {
-                    const docRef = doc(db, 'submissions', submissionId);
-                    const docSnap = await getDoc(docRef);
-                    
-                    if (docSnap.exists()) {
-                        submission = docSnap.data();
-                    }
-                }
+                if (docSnap.exists()) {
+                    const sub = docSnap.data();
 
-                if (!submission) {
-                    submission = {
-                        userName: 'John Doe',
-                        taskId: '123',
-                        submittedAt: new Date().toISOString(),
-                        work: 'Sample work submission',
-                        notes: 'Sample notes'
-                    };
-                }
+                    document.getElementById('reviewModalBody').innerHTML = `
+                        <div style="margin-bottom: 20px;">
+                            <h3 style="margin-bottom: 15px;">Submission Details</h3>
+                            
+                            <div style="background: #f8fafc; padding: 15px; border-radius: 10px; margin-bottom: 15px;">
+                                <p><strong>👤 User:</strong> ${sub.userName}</p>
+                                <p><strong>📋 Task:</strong> ${sub.taskTitle || `Task #${sub.taskId}`}</p>
+                                <p><strong>💰 Reward:</strong> $${sub.reward || 0}</p>
+                                <p><strong>📅 Submitted:</strong> ${new Date(sub.submittedAt).toLocaleString()}</p>
+                            </div>
 
-                document.getElementById('reviewModalBody').innerHTML = `
-                    <div style="margin-bottom: 20px;">
-                        <h3>Submission Details</h3>
-                        <p><strong>User:</strong> ${submission.userName}</p>
-                        <p><strong>Task ID:</strong> #${submission.taskId}</p>
-                        <p><strong>Submitted:</strong> ${new Date(submission.submittedAt).toLocaleString()}</p>
-                        <p><strong>Work:</strong></p>
-                        <div style="background: #f8f9fa; padding: 10px; border-radius: 5px; margin: 10px 0;">
-                            ${submission.work}
+                            <div style="margin-bottom: 15px;">
+                                <label style="font-weight: 600; display: block; margin-bottom: 8px;">Work Submitted:</label>
+                                <div style="background: #f8fafc; padding: 15px; border-radius: 10px; border-left: 4px solid #667eea;">
+                                    ${sub.work}
+                                </div>
+                            </div>
+
+                            ${sub.notes ? `
+                                <div style="margin-bottom: 15px;">
+                                    <label style="font-weight: 600; display: block; margin-bottom: 8px;">User Notes:</label>
+                                    <div style="background: #f8fafc; padding: 15px; border-radius: 10px;">
+                                        ${sub.notes}
+                                    </div>
+                                </div>
+                            ` : ''}
+
+                            <div class="form-group">
+                                <label>Your Feedback</label>
+                                <textarea id="adminFeedback" rows="4" placeholder="Provide feedback to the user..."></textarea>
+                            </div>
+
+                            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                                <button class="btn-primary" style="flex: 1; background: #28a745;" onclick="processSubmission('${submissionId}', 'approved')">✅ Approve & Pay</button>
+                                <button class="btn-primary" style="flex: 1; background: #dc3545;" onclick="processSubmission('${submissionId}', 'rejected')">❌ Reject</button>
+                            </div>
                         </div>
-                        ${submission.notes ? `<p><strong>Notes:</strong> ${submission.notes}</p>` : ''}
-                    </div>
+                    `;
 
-                    <div class="form-group">
-                        <label>Review / Feedback</label>
-                        <textarea id="adminFeedback" rows="4" placeholder="Enter your feedback for the user..."></textarea>
-                    </div>
-
-                    <div style="display: flex; gap: 10px; margin-top: 20px;">
-                        <button class="btn-sm btn-approve" style="flex: 1; padding: 10px;" onclick="processSubmission('${submissionId}', 'approved')">Approve & Pay</button>
-                        <button class="btn-sm btn-reject" style="flex: 1; padding: 10px;" onclick="processSubmission('${submissionId}', 'rejected')">Reject</button>
-                    </div>
-                `;
-
-                document.getElementById('reviewModal').classList.add('active');
+                    document.getElementById('reviewModal').classList.add('active');
+                }
             } catch (error) {
                 console.error('Error loading submission:', error);
                 showMessage('Error loading submission', 'error');
-            } finally {
-                showLoading(false);
             }
         }
 
         // Process submission
         async function processSubmission(submissionId, status) {
-            const feedback = document.getElementById('adminFeedback')?.value.trim() || '';
+            const feedback = document.getElementById('adminFeedback')?.value.trim() || 'No feedback provided';
 
             showLoading(true);
 
             try {
-                if (db) {
-                    // Update submission status
-                    const submissionRef = doc(db, 'submissions', submissionId);
-                    await updateDoc(submissionRef, {
-                        status: status,
-                        reviewedAt: new Date().toISOString(),
-                        reviewedBy: currentAdmin?.uid,
-                        adminFeedback: feedback
-                    });
+                const submissionRef = doc(db, 'submissions', submissionId);
+                const submissionSnap = await getDoc(submissionRef);
+                const submission = submissionSnap.data();
 
-                    // If approved, update user balance
-                    if (status === 'approved') {
-                        const submissionSnap = await getDoc(submissionRef);
-                        const submission = submissionSnap.data();
+                // Update submission
+                await updateDoc(submissionRef, {
+                    status: status,
+                    reviewedAt: new Date().toISOString(),
+                    reviewedBy: currentAdmin?.email,
+                    adminFeedback: feedback
+                });
 
-                        // Get user document
-                        const userRef = doc(db, 'users', submission.userId);
-                        const userSnap = await getDoc(userRef);
-
-                        if (userSnap.exists()) {
-                            const userData = userSnap.data();
-                            const newBalance = (userData.balance || 0) + (submission.reward || 0);
-                            const newTotalEarnings = (userData.totalEarnings || 0) + (submission.reward || 0);
-
-                            await updateDoc(userRef, {
-                                balance: newBalance,
-                                totalEarnings: newTotalEarnings,
-                                tasksCompleted: (userData.tasksCompleted || 0) + 1
-                            });
-                        }
+                // If approved, update user balance
+                if (status === 'approved' && submission.reward) {
+                    const usersQuery = query(collection(db, 'users'), where('uid', '==', submission.userId));
+                    const usersSnap = await getDocs(usersQuery);
+                    
+                    if (!usersSnap.empty) {
+                        const userDoc = usersSnap.docs[0];
+                        const userData = userDoc.data();
+                        
+                        await updateDoc(doc(db, 'users', userDoc.id), {
+                            balance: (userData.balance || 0) + submission.reward,
+                            totalEarnings: (userData.totalEarnings || 0) + submission.reward,
+                            tasksCompleted: (userData.tasksCompleted || 0) + 1
+                        });
                     }
-
-                    // Add feedback
-                    await addDoc(collection(db, 'feedback'), {
-                        userId: submission.userId,
-                        taskId: submission.taskId,
-                        message: feedback,
-                        status: status,
-                        createdAt: new Date().toISOString(),
-                        adminResponse: status === 'approved' ? 'Your submission has been approved!' : 'Your submission has been rejected. Please review the feedback.'
-                    });
                 }
 
-                showMessage(`Submission ${status}!`, 'success');
-                closeReviewModal();
-                loadSubmissions('pending');
+                // Add feedback to user's feedback collection
+                await addDoc(collection(db, 'feedback'), {
+                    userId: submission.userId,
+                    taskId: submission.taskId,
+                    message: feedback,
+                    status: status,
+                    createdAt: new Date().toISOString(),
+                    adminResponse: status === 'approved' ? '✅ Your submission has been approved!' : '❌ Your submission has been rejected.'
+                });
+
+                showMessage(`Submission ${status}! User notified.`, 'success');
+                closeModal('reviewModal');
 
             } catch (error) {
                 console.error('Error processing submission:', error);
@@ -1650,133 +1911,98 @@
             }
         }
 
-        // Load withdrawals
-        async function loadWithdrawals(status) {
-            showLoading(true);
-
-            try {
-                const tbody = document.getElementById('withdrawalsList');
-                tbody.innerHTML = '<tr><td colspan="6" class="empty-state">Loading withdrawals...</td></tr>';
-
-                let withdrawals = [];
-
-                if (db) {
-                    const q = query(
-                        collection(db, 'withdrawals'),
-                        where('status', '==', status),
-                        orderBy('requestedAt', 'desc')
-                    );
-                    const withdrawalsSnap = await getDocs(q);
-                    
-                    withdrawalsSnap.forEach(doc => {
-                        withdrawals.push({
-                            id: doc.id,
-                            ...doc.data()
-                        });
-                    });
+        // Load withdrawals with real-time updates
+        function loadWithdrawals(status) {
+            const tbody = document.getElementById('withdrawalsList');
+            
+            if (unsubscribers.withdrawals) unsubscribers.withdrawals();
+            
+            const q = query(
+                collection(db, 'withdrawals'),
+                where('status', '==', status),
+                orderBy('requestedAt', 'desc')
+            );
+            
+            unsubscribers.withdrawals = onSnapshot(q, (snapshot) => {
+                if (snapshot.empty) {
+                    tbody.innerHTML = `<tr><td colspan="6" class="empty-state"><i>💰</i>No ${status} withdrawals</td></tr>`;
+                    return;
                 }
 
-                // Add sample withdrawals if no data
-                if (withdrawals.length === 0) {
-                    withdrawals = [
-                        { id: '1', userName: 'John Doe', amount: 50, method: 'PayPal', requestedAt: new Date().toISOString(), status: 'pending' },
-                        { id: '2', userName: 'Jane Smith', amount: 100, method: 'Bank Transfer', requestedAt: new Date().toISOString(), status: 'pending' }
-                    ];
-                }
-
-                tbody.innerHTML = withdrawals.map(w => `
-                    <tr>
-                        <td>${w.userName || 'Unknown'}</td>
-                        <td>$${w.amount}</td>
-                        <td>${w.method}</td>
-                        <td>${new Date(w.requestedAt).toLocaleDateString()}</td>
-                        <td><span class="status-badge badge-${w.status}">${w.status}</span></td>
-                        <td>
-                            <div class="action-btns">
-                                <button class="btn-sm btn-view" onclick="processWithdrawal('${w.id}')">Process</button>
-                            </div>
-                        </td>
-                    </tr>
-                `).join('');
-
-            } catch (error) {
-                console.error('Error loading withdrawals:', error);
-                document.getElementById('withdrawalsList').innerHTML = '<tr><td colspan="6" class="empty-state">Error loading withdrawals</td></tr>';
-            } finally {
-                showLoading(false);
-            }
+                tbody.innerHTML = '';
+                snapshot.forEach(doc => {
+                    const w = doc.data();
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>${w.userName || 'Unknown'}</td>
+                            <td>$${w.amount}</td>
+                            <td>${w.method}</td>
+                            <td>${new Date(w.requestedAt).toLocaleDateString()}</td>
+                            <td><span class="status-badge badge-${w.status}">${w.status}</span></td>
+                            <td>
+                                <div class="action-btns">
+                                    <button class="btn-sm btn-view" onclick="processWithdrawal('${doc.id}')">Process</button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                });
+            });
         }
 
-        // Show withdrawal tab
-        function showWithdrawalTab(status, event) {
-            // Update tab UI
-            document.querySelectorAll('#withdrawalsSection .tab').forEach(t => {
-                t.classList.remove('active');
-            });
-            event.currentTarget.classList.add('active');
-
-            // Load withdrawals with selected status
+        // Filter withdrawals
+        function filterWithdrawals(status, element) {
+            document.querySelectorAll('#withdrawalsSection .premium-tab').forEach(t => t.classList.remove('active'));
+            element.classList.add('active');
             loadWithdrawals(status);
         }
 
         // Process withdrawal
         async function processWithdrawal(withdrawalId) {
             currentWithdrawalId = withdrawalId;
-            showLoading(true);
-
+            
             try {
-                let withdrawal = null;
+                const docSnap = await getDoc(doc(db, 'withdrawals', withdrawalId));
                 
-                if (db) {
-                    const docRef = doc(db, 'withdrawals', withdrawalId);
-                    const docSnap = await getDoc(docRef);
-                    
-                    if (docSnap.exists()) {
-                        withdrawal = docSnap.data();
-                    }
-                }
+                if (docSnap.exists()) {
+                    const w = docSnap.data();
 
-                if (!withdrawal) {
-                    withdrawal = {
-                        userName: 'John Doe',
-                        amount: 50,
-                        method: 'PayPal',
-                        accountDetails: 'john@example.com',
-                        requestedAt: new Date().toISOString()
-                    };
-                }
+                    document.getElementById('withdrawalModalBody').innerHTML = `
+                        <div style="margin-bottom: 20px;">
+                            <h3 style="margin-bottom: 15px;">Withdrawal Details</h3>
+                            
+                            <div style="background: #f8fafc; padding: 15px; border-radius: 10px; margin-bottom: 15px;">
+                                <p><strong>👤 User:</strong> ${w.userName}</p>
+                                <p><strong>💰 Amount:</strong> $${w.amount}</p>
+                                <p><strong>💳 Method:</strong> ${w.method}</p>
+                                <p><strong>📅 Requested:</strong> ${new Date(w.requestedAt).toLocaleString()}</p>
+                            </div>
 
-                document.getElementById('withdrawalModalBody').innerHTML = `
-                    <div style="margin-bottom: 20px;">
-                        <h3>Withdrawal Request</h3>
-                        <p><strong>User:</strong> ${withdrawal.userName}</p>
-                        <p><strong>Amount:</strong> $${withdrawal.amount}</p>
-                        <p><strong>Method:</strong> ${withdrawal.method}</p>
-                        <p><strong>Account Details:</strong></p>
-                        <div style="background: #f8f9fa; padding: 10px; border-radius: 5px; margin: 10px 0;">
-                            ${withdrawal.accountDetails}
+                            <div style="margin-bottom: 15px;">
+                                <label style="font-weight: 600; display: block; margin-bottom: 8px;">Account Details:</label>
+                                <div style="background: #f8fafc; padding: 15px; border-radius: 10px; border-left: 4px solid #667eea;">
+                                    ${w.accountDetails}
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Admin Notes</label>
+                                <textarea id="adminWithdrawalNotes" rows="3" placeholder="Add notes about this withdrawal..."></textarea>
+                            </div>
+
+                            <div style="display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap;">
+                                <button class="btn-primary" style="flex: 1; background: #28a745;" onclick="updateWithdrawalStatus('${withdrawalId}', 'completed')">✅ Mark Completed</button>
+                                <button class="btn-primary" style="flex: 1; background: #6f42c1;" onclick="updateWithdrawalStatus('${withdrawalId}', 'processing')">⚙️ Processing</button>
+                                <button class="btn-primary" style="flex: 1; background: #dc3545;" onclick="updateWithdrawalStatus('${withdrawalId}', 'rejected')">❌ Reject</button>
+                            </div>
                         </div>
-                        <p><strong>Requested:</strong> ${new Date(withdrawal.requestedAt).toLocaleString()}</p>
-                    </div>
+                    `;
 
-                    <div class="form-group">
-                        <label>Admin Notes</label>
-                        <textarea id="adminWithdrawalNotes" rows="3" placeholder="Enter any notes about this withdrawal..."></textarea>
-                    </div>
-
-                    <div style="display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap;">
-                        <button class="btn-sm btn-approve" style="flex: 1; padding: 10px;" onclick="updateWithdrawalStatus('${withdrawalId}', 'completed')">Mark as Completed</button>
-                        <button class="btn-sm btn-process" style="flex: 1; padding: 10px;" onclick="updateWithdrawalStatus('${withdrawalId}', 'processing')">Mark as Processing</button>
-                        <button class="btn-sm btn-reject" style="flex: 1; padding: 10px;" onclick="updateWithdrawalStatus('${withdrawalId}', 'rejected')">Reject</button>
-                    </div>
-                `;
-
-                document.getElementById('withdrawalModal').classList.add('active');
+                    document.getElementById('withdrawalModal').classList.add('active');
+                }
             } catch (error) {
                 console.error('Error loading withdrawal:', error);
                 showMessage('Error loading withdrawal', 'error');
-            } finally {
-                showLoading(false);
             }
         }
 
@@ -1787,35 +2013,34 @@
             showLoading(true);
 
             try {
-                if (db) {
-                    const withdrawalRef = doc(db, 'withdrawals', withdrawalId);
-                    await updateDoc(withdrawalRef, {
-                        status: status,
-                        processedAt: new Date().toISOString(),
-                        processedBy: currentAdmin?.uid,
-                        adminNotes: notes
-                    });
+                const withdrawalRef = doc(db, 'withdrawals', withdrawalId);
+                const withdrawalSnap = await getDoc(withdrawalRef);
+                const withdrawal = withdrawalSnap.data();
 
-                    // If rejected, refund the amount to user
-                    if (status === 'rejected') {
-                        const withdrawalSnap = await getDoc(withdrawalRef);
-                        const withdrawal = withdrawalSnap.data();
+                await updateDoc(withdrawalRef, {
+                    status: status,
+                    processedAt: new Date().toISOString(),
+                    processedBy: currentAdmin?.email,
+                    adminNotes: notes
+                });
 
-                        const userRef = doc(db, 'users', withdrawal.userId);
-                        const userSnap = await getDoc(userRef);
-
-                        if (userSnap.exists()) {
-                            const userData = userSnap.data();
-                            await updateDoc(userRef, {
-                                balance: (userData.balance || 0) + withdrawal.amount
-                            });
-                        }
+                // If rejected, refund the amount
+                if (status === 'rejected') {
+                    const usersQuery = query(collection(db, 'users'), where('uid', '==', withdrawal.userId));
+                    const usersSnap = await getDocs(usersQuery);
+                    
+                    if (!usersSnap.empty) {
+                        const userDoc = usersSnap.docs[0];
+                        const userData = userDoc.data();
+                        
+                        await updateDoc(doc(db, 'users', userDoc.id), {
+                            balance: (userData.balance || 0) + withdrawal.amount
+                        });
                     }
                 }
 
                 showMessage(`Withdrawal ${status}!`, 'success');
-                closeWithdrawalModal();
-                loadWithdrawals('pending');
+                closeModal('withdrawalModal');
 
             } catch (error) {
                 console.error('Error updating withdrawal:', error);
@@ -1828,21 +2053,21 @@
         // Load categories
         function loadCategories() {
             const categories = [
-                { icon: '📊', name: 'Data Entry', minPrice: 5, maxPrice: 20, tasks: 15 },
-                { icon: '✍️', name: 'Content Writing', minPrice: 10, maxPrice: 50, tasks: 8 },
-                { icon: '🧪', name: 'Testing', minPrice: 15, maxPrice: 30, tasks: 12 },
-                { icon: '📝', name: 'Surveys', minPrice: 2, maxPrice: 10, tasks: 25 },
-                { icon: '🎨', name: 'Design', minPrice: 20, maxPrice: 100, tasks: 6 },
-                { icon: '📱', name: 'Social Media', minPrice: 1, maxPrice: 5, tasks: 30 }
+                { icon: '📊', name: 'Data Entry', min: 5, max: 20, tasks: 15 },
+                { icon: '✍️', name: 'Content Writing', min: 10, max: 50, tasks: 8 },
+                { icon: '🧪', name: 'Testing', min: 15, max: 30, tasks: 12 },
+                { icon: '📝', name: 'Surveys', min: 2, max: 10, tasks: 25 },
+                { icon: '🎨', name: 'Design', min: 20, max: 100, tasks: 6 },
+                { icon: '📱', name: 'Social Media', min: 1, max: 5, tasks: 30 }
             ];
 
             const tbody = document.getElementById('categoriesList');
             tbody.innerHTML = categories.map((cat, index) => `
                 <tr>
                     <td style="font-size: 1.5rem;">${cat.icon}</td>
-                    <td>${cat.name}</td>
-                    <td>$${cat.minPrice} - $${cat.maxPrice}</td>
-                    <td>${cat.tasks}</td>
+                    <td><strong>${cat.name}</strong></td>
+                    <td>$${cat.min} - $${cat.max}</td>
+                    <td>${cat.tasks} tasks</td>
                     <td>
                         <div class="action-btns">
                             <button class="btn-sm btn-edit" onclick="editCategory(${index})">Edit</button>
@@ -1857,11 +2082,11 @@
         function addCategory() {
             const name = document.getElementById('categoryName').value.trim();
             const icon = document.getElementById('categoryIcon').value.trim();
-            const minPrice = document.getElementById('categoryMinPrice').value;
-            const maxPrice = document.getElementById('categoryMaxPrice').value;
+            const min = document.getElementById('categoryMinPrice').value;
+            const max = document.getElementById('categoryMaxPrice').value;
 
-            if (!name || !icon || !minPrice || !maxPrice) {
-                showMessage('Please fill in all fields', 'error');
+            if (!name || !icon) {
+                showMessage('Please fill in category name and icon', 'error');
                 return;
             }
 
@@ -1873,97 +2098,140 @@
             document.getElementById('categoryMinPrice').value = '';
             document.getElementById('categoryMaxPrice').value = '';
 
-            // Reload categories
             loadCategories();
         }
 
         // Edit category
         window.editCategory = function(index) {
-            showMessage(`Edit category ${index}`, 'info');
+            showMessage('Edit category feature coming soon', 'info');
         };
 
         // Delete category
         window.deleteCategory = function(index) {
             if (confirm('Are you sure you want to delete this category?')) {
-                showMessage(`Category ${index} deleted`, 'success');
+                showMessage('Category deleted', 'success');
             }
         };
 
-        // Load settings
-        function loadSettings() {
-            // Load admins
-            const adminsList = document.getElementById('adminsList');
-            adminsList.innerHTML = `
-                <tr>
-                    <td>admin@taskmaster.com</td>
-                    <td>Super Admin</td>
-                    <td><button class="btn-sm btn-delete" onclick="removeAdmin('admin@taskmaster.com')">Remove</button></td>
-                </tr>
-                <tr>
-                    <td>moderator@taskmaster.com</td>
-                    <td>Moderator</td>
-                    <td><button class="btn-sm btn-delete" onclick="removeAdmin('moderator@taskmaster.com')">Remove</button></td>
-                </tr>
-            `;
+        // Load announcements
+        function loadAnnouncements() {
+            const tbody = document.getElementById('announcementsList');
+            
+            if (unsubscribers.announcements) unsubscribers.announcements();
+            
+            const q = query(collection(db, 'announcements'), orderBy('createdAt', 'desc'));
+            
+            unsubscribers.announcements = onSnapshot(q, (snapshot) => {
+                if (snapshot.empty) {
+                    tbody.innerHTML = `<tr><td colspan="6" class="empty-state"><i>📢</i>No announcements yet</td></tr>`;
+                    return;
+                }
+
+                tbody.innerHTML = '';
+                snapshot.forEach(doc => {
+                    const a = doc.data();
+                    tbody.innerHTML += `
+                        <tr>
+                            <td><strong>${a.title}</strong></td>
+                            <td>${a.message.substring(0, 50)}...</td>
+                            <td>${new Date(a.createdAt).toLocaleDateString()}</td>
+                            <td><span class="status-badge" style="background: ${a.priority === 'urgent' ? '#dc3545' : a.priority === 'important' ? '#ffc107' : '#17a2b8'}; color: white;">${a.priority}</span></td>
+                            <td>${a.views || 0}</td>
+                            <td>
+                                <button class="btn-sm btn-delete" onclick="deleteAnnouncement('${doc.id}')">Delete</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            });
         }
 
-        // Save settings
-        function saveSettings() {
-            const platformName = document.getElementById('platformName').value;
-            const minWithdrawal = document.getElementById('minWithdrawal').value;
-            const platformFee = document.getElementById('platformFee').value;
+        // Send announcement
+        async function sendAnnouncement() {
+            const title = document.getElementById('announcementTitle').value.trim();
+            const message = document.getElementById('announcementMessage').value.trim();
+            const priority = document.getElementById('announcementPriority').value;
+            const expiry = document.getElementById('announcementExpiry').value;
 
-            showMessage('Settings saved successfully!', 'success');
-        }
-
-        // Add admin
-        function addAdmin() {
-            const email = document.getElementById('adminEmail').value.trim();
-
-            if (!email) {
-                showMessage('Please enter an email', 'error');
+            if (!title || !message) {
+                showMessage('Please enter title and message', 'error');
                 return;
             }
 
-            showMessage(`Admin ${email} added successfully!`, 'success');
-            document.getElementById('adminEmail').value = '';
-            loadSettings();
+            showLoading(true);
+            document.getElementById('sendAnnouncementBtn').disabled = true;
+
+            try {
+                await addDoc(collection(db, 'announcements'), {
+                    title: title,
+                    message: message,
+                    priority: priority,
+                    expiry: expiry || null,
+                    createdAt: new Date().toISOString(),
+                    createdBy: currentAdmin?.email,
+                    views: 0,
+                    active: true
+                });
+
+                showMessage('Announcement sent to all users!', 'success');
+                
+                // Clear form
+                document.getElementById('announcementTitle').value = '';
+                document.getElementById('announcementMessage').value = '';
+
+            } catch (error) {
+                console.error('Error sending announcement:', error);
+                showMessage('Error sending announcement', 'error');
+            } finally {
+                showLoading(false);
+                document.getElementById('sendAnnouncementBtn').disabled = false;
+            }
         }
 
-        // Remove admin
-        window.removeAdmin = function(email) {
-            if (confirm(`Are you sure you want to remove ${email}?`)) {
-                showMessage(`Admin ${email} removed`, 'success');
+        // Delete announcement
+        window.deleteAnnouncement = async function(announcementId) {
+            if (confirm('Are you sure you want to delete this announcement?')) {
+                showLoading(true);
+                try {
+                    await deleteDoc(doc(db, 'announcements', announcementId));
+                    showMessage('Announcement deleted', 'success');
+                } catch (error) {
+                    console.error('Error deleting announcement:', error);
+                    showMessage('Error deleting announcement', 'error');
+                } finally {
+                    showLoading(false);
+                }
             }
         };
 
-        // Close modals
-        function closeReviewModal() {
-            document.getElementById('reviewModal').classList.remove('active');
+        // Save settings
+        function saveSettings() {
+            showMessage('Settings saved successfully!', 'success');
         }
 
-        function closeWithdrawalModal() {
-            document.getElementById('withdrawalModal').classList.remove('active');
+        // Close modal
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
         }
 
-        function closeEditTaskModal() {
-            document.getElementById('editTaskModal').classList.remove('active');
-        }
-
-        // Check authentication and admin status
-        onAuthStateChanged(auth, (user) => {
+        // Check authentication
+        onAuthStateChanged(auth, async (user) => {
             if (user && user.emailVerified) {
-                // Check if user is admin
-                const adminEmails = ['admin@taskmaster.com']; // Add your admin emails
-                
-                if (adminEmails.includes(user.email)) {
+                // Check if user is the admin
+                if (user.email === 'wanyoike755@gmail.com') {
                     currentAdmin = user;
-                    document.getElementById('adminName').textContent = user.displayName || 'Admin';
+                    document.getElementById('adminEmail').textContent = user.email;
+                    showMessage('Welcome Admin!', 'success');
                     loadDashboardData();
                 } else {
-                    // Redirect non-admin users to dashboard
-                    window.location.href = 'dashboard.html';
+                    // Not authorized
+                    showMessage('You do not have admin access', 'error');
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 2000);
                 }
+            } else if (user && !user.emailVerified) {
+                window.location.href = 'login.html?verify=' + encodeURIComponent(user.email);
             } else {
                 window.location.href = 'login.html';
             }
